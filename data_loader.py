@@ -126,25 +126,25 @@ class H5pyDataset(data.Dataset):
 		gt    = Image.fromarray(np.array(fp['annot']))
 		fp.close()
 
-		aspect_ratio = image.size[1]/image.size[0]
+		#aspect_ratio = image.size[1]/image.size[0]
 
-		Transform = []
+		#Transform = []
 
-		ResizeRange = random.randint(300,320)
-		Transform.append(T.Resize((int(ResizeRange*aspect_ratio),ResizeRange)))
-		p_transform = random.random()
+		#ResizeRange = random.randint(300,320)
+		#Transform.append(T.Resize((int(ResizeRange*aspect_ratio),ResizeRange)))
 
 		# skip augmentation
 
-		Transform.append(T.Resize((int(256*aspect_ratio)-int(256*aspect_ratio)%16,256)))
-		Transform.append(T.ToTensor())
-		Transform = T.Compose(Transform)
+		#Transform.append(T.Resize((int(256*aspect_ratio)-int(256*aspect_ratio)%16,256)))
+		#Transform.append(T.ToTensor())
+		#Transform = T.Compose(Transform)
 		
-		image = Transform(image)
-		gt = Transform(gt)
+		#image = Transform(image)
+		#gt = Transform(gt)
 
-		Norm_ = T.Normalize((0.5,)*n_channel, (0.5,)*n_channel)
-		image = Norm_(image)
+		image /= 256. 
+		image = T.ToTensor(image)
+		image = T.Normalize((0.5,)*n_channel, (0.5,)*n_channel)(image)
 
 		return image, gt
 
