@@ -128,22 +128,12 @@ class H5pyDataset(data.Dataset):
 
 		#aspect_ratio = image.size[1]/image.size[0]
 
-		#Transform = []
+		transform = T.Compose([
+			T.ToTensor(),
+			T.Normalize((128.,)*n_channel, (128.,)*n_channel)
+		])
 
-		#ResizeRange = random.randint(300,320)
-		#Transform.append(T.Resize((int(ResizeRange*aspect_ratio),ResizeRange)))
-
-		# skip augmentation
-
-		#Transform.append(T.Resize((int(256*aspect_ratio)-int(256*aspect_ratio)%16,256)))
-		#Transform.append(T.ToTensor())
-		#Transform = T.Compose(Transform)
-		
-		#image = Transform(image)
-		#gt = Transform(gt)
-
-		image = T.ToTensor()(image)
-		image = T.Normalize((128.,)*n_channel, (128.,)*n_channel)(image)
+		image = transform(image)
 
 		return image, gt
 
