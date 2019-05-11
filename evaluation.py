@@ -24,23 +24,23 @@ class Metrics(object):
 
 
     def add(self, metrics):
-        acc += metrics.acc
-        SE  += metrics.SE 
-        SP  += metrics.SP 
-        PC  += metrics.PC 
-        F1  += metrics.F1 
-        JS  += metrics.JS 
-        DC  += metrics.DC 
+        self.acc += metrics.acc
+        self.SE  += metrics.SE 
+        self.SP  += metrics.SP 
+        self.PC  += metrics.PC 
+        self.F1  += metrics.F1 
+        self.JS  += metrics.JS 
+        self.DC  += metrics.DC 
 
     
     def div(self, num):
-        acc /=  num
-        SE  /=  num
-        SP  /=  num
-        PC  /=  num
-        F1  /=  num
-        JS  /=  num
-        DC  /=  num
+        self.acc /=  num
+        self.SE  /=  num
+        self.SP  /=  num
+        self.PC  /=  num
+        self.F1  /=  num
+        self.JS  /=  num
+        self.DC  /=  num
 
 
 
