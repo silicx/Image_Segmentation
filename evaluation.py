@@ -13,8 +13,8 @@ class Metrics(object):
     DC  = 0.		# Dice Coefficient
 
     def __init__(self, SR=None, GT=None):
-        print(SR.shape)
         if SR is not None and GT is not None:
+            print(SR.shape)
             self.acc = get_accuracy(SR,GT)
             self.SE  = get_sensitivity(SR,GT)
             self.SP  = get_specificity(SR,GT)
