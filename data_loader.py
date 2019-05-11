@@ -115,8 +115,8 @@ class H5pyDataset(data.Dataset):
 		"""Reads an image from a file and preprocesses it and returns."""
 		image_path = self.image_paths[index]
 		fp = h5py.File(image_path, "r")
-		image = np.array(fp['data'])
-		gt    = np.array(fp['annot'])
+		image = Image.fromarray(fp['data'])
+		gt    = Image.fromarray(fp['annot'])
 		fp.close()
 
 		aspect_ratio = image.size[1]/image.size[0]
