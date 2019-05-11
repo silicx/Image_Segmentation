@@ -126,14 +126,9 @@ class H5pyDataset(data.Dataset):
 		gt    = Image.fromarray(np.array(fp['annot']))
 		fp.close()
 
-		#aspect_ratio = image.size[1]/image.size[0]
-
-		transform = T.Compose([
-			T.ToTensor(),
-			T.Normalize((128.,)*n_channel, (128.,)*n_channel)
-		])
-
-		image = transform(image)
+		image = T.ToTensor()(image)
+		image = T.Normalize((128.,)*n_channel, (128.,)*n_channel)(image)
+		gt    = T.ToTensor()(gt)
 
 		return image, gt
 
