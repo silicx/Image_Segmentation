@@ -108,7 +108,7 @@ class Solver(object):
 		return img
 
 
-	def train(self, lr, epoch)
+	def train(self, lr, epoch):
 		self.unet.train(True)
 		epoch_loss = 0
 		
