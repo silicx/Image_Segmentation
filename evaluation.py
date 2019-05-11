@@ -14,10 +14,9 @@ class Metrics(object):
 
     def __init__(self, SR=None, GT=None):
         if SR is not None and GT is not None:
-            bsize = SR.shape[0]
-            SR = torch.split(SR, bsize, dim=0)
-            GT = torch.split(GT, bsize, dim=0)
-            for i in range(bsize):
+            SR = torch.split(SR, 1, dim=0)
+            GT = torch.split(GT, 1, dim=0)
+            for i in range(len(SR)):
                 self.acc += get_accuracy(   SR[i], GT[i])
                 self.SE  += get_sensitivity(SR[i], GT[i])
                 self.SP  += get_specificity(SR[i], GT[i])
