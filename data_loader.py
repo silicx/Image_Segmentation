@@ -123,6 +123,7 @@ class H5pyDataset(data.Dataset):
 		fp.close()
 
 		aspect_ratio = image.size[1]/image.size[0]
+		n_channel = image.size[2]
 
 		Transform = []
 
@@ -139,7 +140,7 @@ class H5pyDataset(data.Dataset):
 		image = Transform(image)
 		gt = Transform(gt)
 
-		Norm_ = T.Normalize((0.5,)*image.size[2], (0.5,)*image.size[2])
+		Norm_ = T.Normalize((0.5,)*n_channel, (0.5,)*n_channel)
 		image = Norm_(image)
 
 		return image, gt
