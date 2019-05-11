@@ -246,7 +246,7 @@ class Solver(object):
 		
 		for epoch in range(self.num_epochs):
 			# train
-			train(lr, epoch)
+			self.train(lr, epoch)
 			
 			# Decay lr
 			if (epoch+1) > (self.num_epochs - self.num_epochs_decay):
@@ -256,7 +256,7 @@ class Solver(object):
 				print ('Decay learning rate to lr: {}.'.format(lr))
 			
 			# val
-			unet_score = validate()
+			unet_score = self.validate()
 
 			# Save Best U-Net model
 			if unet_score > best_unet_score:
@@ -268,4 +268,4 @@ class Solver(object):
 			
 				
 		#===================================== Test ====================================#
-		test(unet_path)
+		self.test(unet_path)
