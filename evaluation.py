@@ -3,7 +3,7 @@ import torch
 # SR : Segmentation Result
 # GT : Ground Truth
 
-class Metrics:
+class Metrics(object):
     acc = 0.		# Accuracy
     SE  = 0.		# Sensitivity (Recall)
     SP  = 0.		# Specificity
