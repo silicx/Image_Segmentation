@@ -14,14 +14,16 @@ class Metrics(object):
 
     def __init__(self, SR=None, GT=None):
         if SR is not None and GT is not None:
+            SR = torch.split(SR, SR.shape[0], dim=0)
+            GT = torch.split(GT, GT.shape[0], dim=0)
             for i in range(SR.shape[0]):
-                self.acc += get_accuracy(   SR[i,...], GT[i,...])
-                self.SE  += get_sensitivity(SR[i,...], GT[i,...])
-                self.SP  += get_specificity(SR[i,...], GT[i,...])
-                self.PC  += get_precision(  SR[i,...], GT[i,...])
-                self.F1  += get_F1(         SR[i,...], GT[i,...])
-                self.JS  += get_JS(         SR[i,...], GT[i,...])
-                self.DC  += get_DC(         SR[i,...], GT[i,...])
+                self.acc += get_accuracy(   SR[i], GT[i])
+                self.SE  += get_sensitivity(SR[i], GT[i])
+                self.SP  += get_specificity(SR[i], GT[i])
+                self.PC  += get_precision(  SR[i], GT[i])
+                self.F1  += get_F1(         SR[i], GT[i])
+                self.JS  += get_JS(         SR[i], GT[i])
+                self.DC  += get_DC(         SR[i], GT[i])
 
 
     def add(self, metrics):
