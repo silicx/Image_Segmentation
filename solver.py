@@ -107,9 +107,6 @@ class Solver(object):
 
 	def train(self):
 		"""Train encoder, generator and discriminator."""
-
-		#====================================== Training ===========================================#
-		#===========================================================================================#
 		
 		unet_path = os.path.join(self.model_path, '%s-%d-%.4f-%d-%.4f.pkl' %(self.model_type,self.num_epochs,self.lr,self.num_epochs_decay,self.augmentation_prob))
 
@@ -138,8 +135,7 @@ class Solver(object):
 				length = 0
 
 				for i, (images, GT) in enumerate(self.train_loader):
-					# GT : Ground Truth
-
+					
 					images = images.to(self.device)
 					GT = GT.to(self.device)
 
@@ -174,12 +170,14 @@ class Solver(object):
 				JS = JS/length
 				DC = DC/length
 
-				# Print the log info
-				print('Epoch [%d/%d], Loss: %.4f, \n[Training] Acc: %.4f, SE: %.4f, SP: %.4f, PC: %.4f, F1: %.4f, JS: %.4f, DC: %.4f' % (
-					  epoch+1, self.num_epochs, \
-					  epoch_loss,\
-					  acc,SE,SP,PC,F1,JS,DC))
 
+				#print('Epoch [%d/%d], Loss: %.4f, \n[Training] Acc: %.4f, SE: %.4f, SP: %.4f, PC: %.4f, F1: %.4f, JS: %.4f, DC: %.4f' % (
+				#	  epoch+1, self.num_epochs, \
+				#	  epoch_loss,\
+				#	  acc,SE,SP,PC,F1,JS,DC))
+				
+				print('Epoch {}/{} [Train], Loss=:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC: {:.4f}'.format(
+					epoch+1, self.num_epochs, epoch_loss, acc, SE, PC, DC))
 			
 
 				# Decay learning rate
