@@ -98,6 +98,9 @@ class ImageFolder(data.Dataset):
 
 
 
+
+
+
 class H5pyDataset(data.Dataset):
 	def __init__(self, root,image_size=224,mode='train',augmentation_prob=0.4):
 		"""Initializes image paths and preprocessing module."""
@@ -136,7 +139,7 @@ class H5pyDataset(data.Dataset):
 		image = Transform(image)
 		gt = Transform(gt)
 
-		Norm_ = T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+		Norm_ = T.Normalize((0.5,)*image.size[2], (0.5,)*image.size[2])
 		image = Norm_(image)
 
 		return image, gt
