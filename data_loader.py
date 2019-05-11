@@ -142,9 +142,8 @@ class H5pyDataset(data.Dataset):
 		#image = Transform(image)
 		#gt = Transform(gt)
 
-		image /= 256. 
 		image = T.ToTensor(image)
-		image = T.Normalize((0.5,)*n_channel, (0.5,)*n_channel)(image)
+		image = T.Normalize((128.,)*n_channel, (128.,)*n_channel)(image)
 
 		return image, gt
 
