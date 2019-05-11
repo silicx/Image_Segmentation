@@ -270,7 +270,7 @@ class Solver(object):
 
 				images = images.to(self.device)
 				GT = GT.to(self.device)
-				SR = F.sigmoid(self.unet(images))
+				SR = torch.sigmoid(self.unet(images))
 				acc += get_accuracy(SR,GT)
 				SE += get_sensitivity(SR,GT)
 				SP += get_specificity(SR,GT)
@@ -291,10 +291,16 @@ class Solver(object):
 			unet_score = JS + DC
 
 
-			f = open(os.path.join(self.result_path,'result.csv'), 'a', encoding='utf-8', newline='')
-			wr = csv.writer(f)
-			wr.writerow([self.model_type,acc,SE,SP,PC,F1,JS,DC,self.lr,best_epoch,self.num_epochs,self.num_epochs_decay,self.augmentation_prob])
-			f.close()
+			with open(os.path.join(self.result_path,'result.csv'), 'a', encoding='utf-8', newline='') as f:
+				wr = csv.writer(f)
+				wr.writerow([
+					self.model_type,
+					acc,
+					SE,SP,PC,F1,JS,DC,
+					self.lr,
+					best_epoch,
+					self.num_epochs,self.num_epochs_decay,self.augmentation_prob
+					])
 			
 
 			
