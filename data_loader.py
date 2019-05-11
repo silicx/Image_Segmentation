@@ -118,7 +118,10 @@ class H5pyDataset(data.Dataset):
 		"""Reads an image from a file and preprocesses it and returns."""
 		image_path = self.image_paths[index]
 		fp = h5py.File(image_path, "r")
-		n_channel = fp['data'].shape[2]
+		if len(fp['data'].shape) == 2:
+			n_channel = 1
+		else:
+			n_channel = fp['data'].shape[2]
 		image = Image.fromarray(np.array(fp['data']))
 		gt    = Image.fromarray(np.array(fp['annot']))
 		fp.close()
