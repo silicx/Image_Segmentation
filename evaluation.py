@@ -14,13 +14,13 @@ class Metrics(object):
 
     def __init__(self, SR=None, GT=None):
         if SR is not None and GT is not None:
-            self.acc = get_accuracy(SR,GT)
-            self.SE  = get_sensitivity(SR,GT)
-            self.SP  = get_specificity(SR,GT)
-            self.PC  = get_precision(SR,GT)
-            self.F1  = get_F1(SR,GT)
-            self.JS  = get_JS(SR,GT)
-            self.DC  = get_DC(SR,GT)
+            self.acc = self.get_accuracy(SR,GT)
+            self.SE  = self.get_sensitivity(SR,GT)
+            self.SP  = self.get_specificity(SR,GT)
+            self.PC  = self.get_precision(SR,GT)
+            self.F1  = self.get_F1(SR,GT)
+            self.JS  = self.get_JS(SR,GT)
+            self.DC  = self.get_DC(SR,GT)
 
 
     def add(self, metrics):
