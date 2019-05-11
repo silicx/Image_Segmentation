@@ -170,8 +170,6 @@ class Solver(object):
 		metrics.div(length)
 		unet_score = metrics.JS + metrics.DC
 
-		print('Validation Acc: %.4f, SE: %.4f, SP: %.4f, PC: %.4f, F1: %.4f, JS: %.4f, DC: %.4f'%(acc,SE,SP,PC,F1,JS,DC))
-
 		logging.info('Validation, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}, unet_score={:.4f}'.format(
 			metrics.acc, metrics.SE, metrics.PC, metrics.DC, unet_score))
 		
