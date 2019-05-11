@@ -12,7 +12,7 @@ from network import U_Net,R2U_Net,AttU_Net,R2AttU_Net
 import csv
 import logging
 
-logging.basicConfig(format='%(asctime)s %(message)s')
+logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
 
 
 class Solver(object):
@@ -122,7 +122,7 @@ class Solver(object):
 
 			# SR : Segmentation Result
 			SR = self.unet(images)
-			SR_probs = F.sigmoid(SR)
+			SR_probs = torch.sigmoid(SR)
 			SR_flat = SR_probs.view(SR_probs.size(0),-1)
 
 			GT_flat = GT.view(GT.size(0),-1)
@@ -161,7 +161,7 @@ class Solver(object):
 
 			images = images.to(self.device)
 			GT = GT.to(self.device)
-			SR = F.sigmoid(self.unet(images))
+			SR = torch.sigmoid(self.unet(images))
 
 
 			metrics.add(Metrics(SR, GT))
