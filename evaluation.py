@@ -14,7 +14,7 @@ class Metrics(object):
 
     def __init__(self, SR=None, GT=None):
         if SR is not None and GT is not None:
-            for i in range(SP.shape[0]):
+            for i in range(SR.shape[0]):
                 self.acc += get_accuracy(   SR[i,...], GT[i,...])
                 self.SE  += get_sensitivity(SR[i,...], GT[i,...])
                 self.SP  += get_specificity(SR[i,...], GT[i,...])
