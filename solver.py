@@ -191,7 +191,7 @@ class Solver(object):
 
 
 
-	def test(self):
+	def test(self, unet_path):
 		del self.unet
 		self.build_model()
 		self.unet.load_state_dict(torch.load(unet_path))
@@ -213,8 +213,18 @@ class Solver(object):
 		metrics.div(length)
 		unet_score = metrics.JS + metrics.DC
 
-
-		return metrics, unet_score
+		with open(os.path.join(self.result_path,'result.cvs'), 'a', encoding='utf-8', newline='') as f:
+			wr = csv.writer(f)
+			wr.writerow([
+				metrics.acc,
+				metrics.SE,
+				metrics.SP,
+				metrics.PC,
+				metrics.F1,
+				metrics.JS,
+				metrics.DC,
+				unet_score,
+				])
 
 
 	def run(self):
@@ -230,12 +240,6 @@ class Solver(object):
 
 		logging.info("Unet path: {}".format(unet_path))
 
-		if os.path.isfile(unet_path):
-			# Load the pretrained Encoder
-			self.unet.load_state_dict(torch.load(unet_path))
-			logging.info('%s is Successfully Loaded from %s'%(self.model_type,unet_path))
-			logging.info('SKIP ???')
-			return
 
 		lr = self.lr
 		best_unet_score = 0.
@@ -264,25 +268,4 @@ class Solver(object):
 			
 				
 		#===================================== Test ====================================#
-		metrics, unet_score = test(unet_path)
-		
-
-		with open(os.path.join(self.result_path,'result.cvs'), 'a', encoding='utf-8', newline='') as f:
-			wr = csv.writer(f)
-			wr.writerow([
-				self.model_type,
-				metrics.acc,
-				metrics.SE,
-				metrics.SP,
-				metrics.PC,
-				metrics.F1,
-				metrics.JS,
-				metrics.DC,
-				unet_score,
-				self.lr,
-				best_epoch,
-				self.num_epochs,
-				self.num_epochs_decay,
-				self.augmentation_prob
-				])
-			
+		test(unet_path)
