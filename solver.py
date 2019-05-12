@@ -145,8 +145,8 @@ class Solver(object):
 				i+1, len(self.train_loader), loss.item(),
 				delta.acc, delta.SE, delta.PC, delta.DC))
 			
-			SR.cpu()
-			GT.cpu()
+			SR = SR.cpu()
+			GT = GT.cpu()
 
 			if i%10==0:
 				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
