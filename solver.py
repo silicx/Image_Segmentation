@@ -170,44 +170,44 @@ class Solver(object):
 
 
 	def validate(self):
-		self.unet.train(False)
-		self.unet.eval()
+		with torch.no_grad():
+			self.unet.train(False)
+			self.unet.eval()
 
-		metrics = Metrics()
-		length=0
-		for i, (images, GT) in enumerate(self.valid_loader):
-			if i%50==0:
-				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
-				im0 = torchvision.transforms.ToPILImage()(images[0, ...])
-				os.makedirs("/content/drive/image_log/valid", exist_ok=True)
-				gt0.save("/content/drive/image_log/valid/{}_gt_or.jpg".format(i))
-				im0.save("/content/drive/image_log/valid/{}_im.jpg".format(i))
+			metrics = Metrics()
+			length=0
+			for i, (images, GT) in enumerate(self.valid_loader):
+				if i%50==0:
+					gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
+					im0 = torchvision.transforms.ToPILImage()(images[0, ...])
+					os.makedirs("/content/drive/image_log/valid", exist_ok=True)
+					gt0.save("/content/drive/image_log/valid/{}_gt_or.jpg".format(i))
+					im0.save("/content/drive/image_log/valid/{}_im.jpg".format(i))
 
-			images = images.to(self.device)
-			GT = GT.to(self.device)
-			SR = torch.sigmoid(self.unet(images))
+				images = images.to(self.device)
+				GT = GT.to(self.device)
+				SR = torch.sigmoid(self.unet(images))
 
-			metrics.add(Metrics(SR, GT))
-			length += images.size(0)
+				metrics.add(Metrics(SR, GT))
+				length += images.size(0)
 
 
-			if i%50==0:
-				SR = SR.cpu()
-				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
-				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5).float())
-				os.makedirs("/content/drive/image_log/valid", exist_ok=True)
-				sr0.save("/content/drive/image_log/valid/{}_pred.jpg".format(i))
-				srb.save("/content/drive/image_log/valid/{}_pred_bin.jpg".format(i))
-			
-		metrics.div(length)
-		unet_score = metrics.JS + metrics.DC
+				if i%50==0:
+					SR = SR.cpu()
+					sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
+					srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5).float())
+					os.makedirs("/content/drive/image_log/valid", exist_ok=True)
+					sr0.save("/content/drive/image_log/valid/{}_pred.jpg".format(i))
+					srb.save("/content/drive/image_log/valid/{}_pred_bin.jpg".format(i))
+				
+			metrics.div(length)
+			unet_score = metrics.JS + metrics.DC
 
-		logging.info('Validation, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}, unet_score={:.4f}'.format(
-			metrics.acc, metrics.SE, metrics.PC, metrics.DC, unet_score))
+			logging.info('Validation, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}, unet_score={:.4f}'.format(
+				metrics.acc, metrics.SE, metrics.PC, metrics.DC, unet_score))
 		
 
-
-		return unet_score
+			return unet_score
 
 
 
@@ -264,7 +264,7 @@ class Solver(object):
 		lr = self.lr
 		best_unet_score = 0.
 
-		unet_score = self.validate()
+		self.validate()
 		
 		for epoch in range(self.num_epochs):
 			# train
