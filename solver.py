@@ -133,15 +133,8 @@ class Solver(object):
 			loss.backward()
 			self.optimizer.step()
 
-			SR.detach().numpy()
-			GT.detach().numpy()
-
-			if i%10==0:
-				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
-				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
-				sr0.show()
-				gt0.show()
-
+			SR = SR.detach()
+			GT = GT.detach()
 
 			delta = Metrics(SR, GT)
 			metrics.add(delta)
@@ -151,7 +144,15 @@ class Solver(object):
 			logging.info('Iteration {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
 				i+1, len(self.train_loader), loss.item(),
 				delta.acc, delta.SE, delta.PC, delta.DC))
-			del delta
+			
+			SR.cpu()
+			GT.cpu()
+
+			if i%10==0:
+				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
+				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
+				sr0.show()
+				gt0.show()
 			
 
 		metrics.div(length)
