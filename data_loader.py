@@ -145,10 +145,10 @@ class H5pyDataset(data.Dataset):
 
 
 
-def get_loader(image_path, image_size, batch_size, num_workers=2, mode='train',augmentation_prob=0.4):
+def get_loader(exp_name, image_path, image_size, batch_size, num_workers=2, mode='train',augmentation_prob=0.4):
 	"""Builds and returns Dataloader."""
 	
-	dataset = H5pyDataset(root = image_path, image_size =image_size, mode=mode,augmentation_prob=augmentation_prob)
+	dataset = H5pyDataset(exp_name = exp_name, root = image_path, image_size =image_size, mode=mode,augmentation_prob=augmentation_prob)
 	data_loader = data.DataLoader(dataset=dataset,
 								  batch_size=batch_size,
 								  shuffle=True,
