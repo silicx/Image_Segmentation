@@ -11,6 +11,7 @@ from evaluation import Metrics
 from network import U_Net,R2U_Net,AttU_Net,R2AttU_Net
 import csv
 import logging
+from PIL import Image
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
 
@@ -132,11 +133,16 @@ class Solver(object):
 			loss.backward()
 			self.optimizer.step()
 
+			if i%10==0:
+				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
+				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
+				sr0.show()
+				gt0.show()
+
 
 			delta = Metrics(SR, GT)
 			metrics.add(delta)
 			length += images.size(0)
-			print(images.shape)
 
 			delta.div(images.size(0))
 			logging.info('Iteration {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
