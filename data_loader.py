@@ -127,6 +127,10 @@ class H5pyDataset(data.Dataset):
 		else:
 			n_channel = fp['data'].shape[2]
 		image = Image.fromarray(np.array(fp['data']))
+
+		if index%10==0:
+			t = Image.fromarray(np.array(fp['annot'])*255)
+			t.save("/content/drive/image_log/{}_gt_ori.jpg".format(index))
 		gt    = Image.fromarray(np.array(fp['annot']))
 		fp.close()
 
@@ -134,8 +138,6 @@ class H5pyDataset(data.Dataset):
 			image = T.functional.crop(image, 100, 122, 256, 256)
 			gt    = T.functional.crop(gt   , 100, 122, 256, 256)
 
-		if index%10==0:
-			gt.save("/content/drive/image_log/{}_gt_ori.jpg".format(index))
 
 		image = T.ToTensor()(image)
 		image = T.Normalize((128.,)*n_channel, (128.,)*n_channel)(image)
