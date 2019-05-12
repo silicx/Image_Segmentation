@@ -122,7 +122,7 @@ class Solver(object):
 
 			if i%10==0:
 				gt = GT.cpu()
-				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...]*255)
+				gt0 = torchvision.transforms.ToPILImage()(gt[0, ...]*255)
 				os.makedirs("/content/drive/image_log/", exist_ok=True)
 				gt0.save("/content/drive/image_log/{}_gt_or.jpg".format(i))
 
