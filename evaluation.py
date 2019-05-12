@@ -15,7 +15,6 @@ class Metrics:
 
         if SR is not None and GT is not None:
             SR = torch.split(SR, 1, dim=0)
-            GT = GT.int()
             GT = torch.split(GT, 1, dim=0)
             for i in range(len(SR)):
                 self.acc += get_accuracy(   SR[i], GT[i])

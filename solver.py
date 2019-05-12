@@ -142,12 +142,14 @@ class Solver(object):
 			logging.info('Iteration {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
 				i+1, len(self.train_loader), loss.item(),
 				delta.acc, delta.SE, delta.PC, delta.DC))
+			del delta
 			
 
 		metrics.div(length)
 		logging.info('Epoch {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
 			epoch+1, self.num_epochs, epoch_loss,
 			metrics.acc, metrics.SE, metrics.PC, metrics.DC))
+		del metrics
 
 
 	def validate(self):
