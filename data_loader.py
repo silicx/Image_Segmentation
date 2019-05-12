@@ -131,7 +131,7 @@ class H5pyDataset(data.Dataset):
 		fp.close()
 
 		if self.exp_name == 'axis0':
-			image = T.functional.crop(100, 120, 250, 260)
+			image = T.functional.crop(image, 100, 120, 250, 260)
 
 		image = T.ToTensor()(image)
 		image = T.Normalize((128.,)*n_channel, (128.,)*n_channel)(image)
