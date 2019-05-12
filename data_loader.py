@@ -102,7 +102,7 @@ class ImageFolder(data.Dataset):
 
 
 class H5pyDataset(data.Dataset):
-	def __init__(self, root,image_size=224,mode='train',augmentation_prob=0.):
+	def __init__(self, root, exp_name, image_size=224,mode='train',augmentation_prob=0.):
 		"""Initializes image paths and preprocessing module."""
 		self.root = root
 		
@@ -112,6 +112,10 @@ class H5pyDataset(data.Dataset):
 		self.mode = mode
 		self.RotationDegree = [0,90,180,270]
 		self.augmentation_prob = augmentation_prob
+
+		assert exp_name in ['axis0', 'axis1', 'axis2']
+		self.exp_name = exp_name
+
 		print("image count in {} path :{}".format(self.mode,len(self.image_paths)))
 
 	def __getitem__(self, index):
@@ -125,6 +129,9 @@ class H5pyDataset(data.Dataset):
 		image = Image.fromarray(np.array(fp['data']))
 		gt    = Image.fromarray(np.array(fp['annot']))
 		fp.close()
+
+		if self.exp_name == 'axis0':
+			image = T.functional.crop(100, 120, 250, 260)
 
 		image = T.ToTensor()(image)
 		image = T.Normalize((128.,)*n_channel, (128.,)*n_channel)(image)

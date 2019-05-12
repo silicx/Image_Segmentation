@@ -140,7 +140,7 @@ class Solver(object):
 
 			delta.div(images.size(0))
 			logging.info('Iteration {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
-				i+1, len(self.train_loader), loss,
+				i+1, len(self.train_loader), loss.item(),
 				delta.acc, delta.SE, delta.PC, delta.DC))
 			
 
