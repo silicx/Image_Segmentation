@@ -118,8 +118,8 @@ class Solver(object):
 
 		for i, (images, GT) in enumerate(self.train_loader):
 			if i%10==0:
-				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...]*255)
-				im0 = torchvision.transforms.ToPILImage()(images[0, ...]*255)
+				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
+				im0 = torchvision.transforms.ToPILImage()(images[0, ...])
 				os.makedirs("/content/drive/image_log/", exist_ok=True)
 				gt0.save("/content/drive/image_log/{}_gt_or.jpg".format(i))
 				im0.save("/content/drive/image_log/{}_im.jpg".format(i))
@@ -155,8 +155,8 @@ class Solver(object):
 
 			if i%10==0:
 				SR = SR.cpu()
-				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...]*255)
-				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5)*255)
+				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
+				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5))
 				os.makedirs("/content/drive/image_log/", exist_ok=True)
 				sr0.save("/content/drive/image_log/{}_pred.jpg".format(i))
 				srb.save("/content/drive/image_log/{}_pred_bin.jpg".format(i))
