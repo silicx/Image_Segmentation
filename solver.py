@@ -121,7 +121,7 @@ class Solver(object):
 			GT = GT.to(self.device)
 
 			# SR : Segmentation Result
-			SR = torch.sigmoid(self.unet(images))
+			SR = self.unet(images)
 			SR_flat = SR.view(SR.size(0),-1)
 
 			GT_flat = GT.view(GT.size(0),-1)
