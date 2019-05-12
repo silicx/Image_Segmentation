@@ -117,14 +117,16 @@ class Solver(object):
 		length = 0
 
 		for i, (images, GT) in enumerate(self.train_loader):
+			if i%10==0:
+				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...]*255)
+				im0 = torchvision.transforms.ToPILImage()(images[0, ...]*255)
+				os.makedirs("/content/drive/image_log/", exist_ok=True)
+				gt0.save("/content/drive/image_log/{}_gt_or.jpg".format(i))
+				im0.save("/content/drive/image_log/{}_im.jpg".format(i))
+
 			images = images.to(self.device)
 			GT = GT.to(self.device)
 
-			if i%10==0:
-				gt = GT.cpu()
-				gt0 = torchvision.transforms.ToPILImage()(gt[0, ...]*255)
-				os.makedirs("/content/drive/image_log/", exist_ok=True)
-				gt0.save("/content/drive/image_log/{}_gt_or.jpg".format(i))
 
 			# SR : Segmentation Result
 			SR = torch.sigmoid(self.unet(images))
