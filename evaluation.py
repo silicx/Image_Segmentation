@@ -14,15 +14,17 @@ class Metrics:
         self.DC  = 0.		# Dice Coefficient
 
         if SR is not None and GT is not None:
+            SR = torch.split(SR, 1, dim=0)
             GT = GT.int()
-            for i in range(SR.size(0)):
-                self.acc += get_accuracy(   SR[i,...], GT[i,...])
-                self.SE  += get_sensitivity(SR[i,...], GT[i,...])
-                self.SP  += get_specificity(SR[i,...], GT[i,...])
-                self.PC  += get_precision(  SR[i,...], GT[i,...])
-                self.F1  += get_F1(         SR[i,...], GT[i,...])
-                self.JS  += get_JS(         SR[i,...], GT[i,...])
-                self.DC  += get_DC(         SR[i,...], GT[i,...])
+            GT = torch.split(GT, 1, dim=0)
+            for i in range(len(SR)):
+                self.acc += get_accuracy(   SR[i], GT[i])
+                self.SE  += get_sensitivity(SR[i], GT[i])
+                self.SP  += get_specificity(SR[i], GT[i])
+                self.PC  += get_precision(  SR[i], GT[i])
+                self.F1  += get_F1(         SR[i], GT[i])
+                self.JS  += get_JS(         SR[i], GT[i])
+                self.DC  += get_DC(         SR[i], GT[i])
 
 
     def add(self, met):
