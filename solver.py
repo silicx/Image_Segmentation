@@ -156,7 +156,7 @@ class Solver(object):
 			if i%10==0:
 				SR = SR.cpu()
 				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
-				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5))
+				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5).float())
 				os.makedirs("/content/drive/image_log/", exist_ok=True)
 				sr0.save("/content/drive/image_log/{}_pred.jpg".format(i))
 				srb.save("/content/drive/image_log/{}_pred_bin.jpg".format(i))
