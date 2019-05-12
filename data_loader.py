@@ -136,6 +136,7 @@ class H5pyDataset(data.Dataset):
 
 
 		image = T.ToTensor()(image)
+		image = (image>77)*(image<140)*255
 		image = T.Normalize((128.,)*n_channel, (128.,)*n_channel)(image)
 		gt    = T.ToTensor()(gt)
 
