@@ -128,9 +128,11 @@ class H5pyDataset(data.Dataset):
 			n_channel = fp['data'].shape[2]
 
 		image = np.array(fp['data'])
-		image = (((image>70)&(image<140))*255).astype(np.uint8)
-		image = Image.fromarray(image)
-		gt    = Image.fromarray(np.array(fp['annot']))
+		image = (((image>70)&(image<140))*255)
+		image = Image.fromarray(image.astype(np.uint8))
+		gt    = np.array(fp['annot'])
+		gt    = gt*255
+		gt    = Image.fromarray(gt.astype(np.uint8))
 		fp.close()
 
 		if self.exp_name == 'axis0':
@@ -139,7 +141,7 @@ class H5pyDataset(data.Dataset):
 
 
 		image = T.ToTensor()(image)
-		image = T.Normalize((128.,)*n_channel, (128.,)*n_channel)(image)
+		image = T.Normalize((.5,)*n_channel, (.5,)*n_channel)(image)
 		gt    = T.ToTensor()(gt)
 
 		print(image.max(), image.min(), gt.max(), gt.min())
