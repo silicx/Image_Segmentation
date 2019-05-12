@@ -152,6 +152,7 @@ class Solver(object):
 				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
 				sr0.show()
 				gt0.show()
+				input("===")
 			
 
 		metrics.div(length)
