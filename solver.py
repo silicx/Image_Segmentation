@@ -156,8 +156,10 @@ class Solver(object):
 			if i%10==0:
 				SR = SR.cpu()
 				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...]*255)
+				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5)*255)
 				os.makedirs("/content/drive/image_log/", exist_ok=True)
 				sr0.save("/content/drive/image_log/{}_pred.jpg".format(i))
+				srb.save("/content/drive/image_log/{}_pred_bin.jpg".format(i))
 			
 
 		metrics.div(length)
@@ -178,7 +180,7 @@ class Solver(object):
 			images = images.to(self.device)
 			GT = GT.to(self.device)
 			SR = torch.sigmoid(self.unet(images))
-
+			torch.nn.loss
 
 			metrics.add(Metrics(SR, GT))
 			length += images.size(0)
