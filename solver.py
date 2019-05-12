@@ -150,9 +150,9 @@ class Solver(object):
 				GT = GT.cpu()
 				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
 				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
-				sr0.show()
-				gt0.show()
-				input("===")
+				os.makedirs("/content/drive/image_log/", exist_ok=True)
+				sr0.save("/content/drive/image_log/{}_pred.jpg".format(i))
+				gt0.save("/content/drive/image_log/{}_gt.jpg".format(i))
 			
 
 		metrics.div(length)
