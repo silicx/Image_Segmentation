@@ -119,7 +119,12 @@ class Solver(object):
 		for i, (images, GT) in enumerate(self.train_loader):
 			images = images.to(self.device)
 			GT = GT.to(self.device)
-			GT.detach()
+
+			if i%10==0:
+				GT = GT.cpu()
+				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...]*256)
+				os.makedirs("/content/drive/image_log/", exist_ok=True)
+				gt0.save("/content/drive/image_log/{}_gt_or.jpg".format(i))
 
 			# SR : Segmentation Result
 			SR = torch.sigmoid(self.unet(images))
