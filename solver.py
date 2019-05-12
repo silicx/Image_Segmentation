@@ -133,6 +133,9 @@ class Solver(object):
 			loss.backward()
 			self.optimizer.step()
 
+			SR.detach()
+			GT.detach()
+
 			if i%10==0:
 				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
 				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
