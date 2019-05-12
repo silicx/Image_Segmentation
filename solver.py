@@ -117,12 +117,12 @@ class Solver(object):
 		length = 0
 
 		for i, (images, GT) in enumerate(self.train_loader):
-			if i%10==0:
+			if i%50==0:
 				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
 				im0 = torchvision.transforms.ToPILImage()(images[0, ...])
-				os.makedirs("/content/drive/image_log/", exist_ok=True)
-				gt0.save("/content/drive/image_log/{}_gt_or.jpg".format(i))
-				im0.save("/content/drive/image_log/{}_im.jpg".format(i))
+				os.makedirs("/content/drive/image_log/train", exist_ok=True)
+				gt0.save("/content/drive/image_log/train/{}_gt_or.jpg".format(i))
+				im0.save("/content/drive/image_log/train/{}_im.jpg".format(i))
 
 			images = images.to(self.device)
 			GT = GT.to(self.device)
@@ -153,13 +153,13 @@ class Solver(object):
 				i+1, len(self.train_loader), loss.item(),
 				delta.acc, delta.SE, delta.PC, delta.DC))
 
-			if i%10==0:
+			if i%50==0:
 				SR = SR.cpu()
 				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
 				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5).float())
-				os.makedirs("/content/drive/image_log/", exist_ok=True)
-				sr0.save("/content/drive/image_log/{}_pred.jpg".format(i))
-				srb.save("/content/drive/image_log/{}_pred_bin.jpg".format(i))
+				os.makedirs("/content/drive/image_log/train", exist_ok=True)
+				sr0.save("/content/drive/image_log/train/{}_pred.jpg".format(i))
+				srb.save("/content/drive/image_log/train/{}_pred_bin.jpg".format(i))
 			
 
 		metrics.div(length)
@@ -176,6 +176,12 @@ class Solver(object):
 		metrics = Metrics()
 		length=0
 		for i, (images, GT) in enumerate(self.valid_loader):
+			if i%50==0:
+				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
+				im0 = torchvision.transforms.ToPILImage()(images[0, ...])
+				os.makedirs("/content/drive/image_log/valid", exist_ok=True)
+				gt0.save("/content/drive/image_log/valid/{}_gt_or.jpg".format(i))
+				im0.save("/content/drive/image_log/valid/{}_im.jpg".format(i))
 
 			images = images.to(self.device)
 			GT = GT.to(self.device)
@@ -183,6 +189,15 @@ class Solver(object):
 
 			metrics.add(Metrics(SR, GT))
 			length += images.size(0)
+
+
+			if i%50==0:
+				SR = SR.cpu()
+				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
+				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5).float())
+				os.makedirs("/content/drive/image_log/valid", exist_ok=True)
+				sr0.save("/content/drive/image_log/valid/{}_pred.jpg".format(i))
+				srb.save("/content/drive/image_log/valid/{}_pred_bin.jpg".format(i))
 			
 		metrics.div(length)
 		unet_score = metrics.JS + metrics.DC
@@ -190,17 +205,7 @@ class Solver(object):
 		logging.info('Validation, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}, unet_score={:.4f}'.format(
 			metrics.acc, metrics.SE, metrics.PC, metrics.DC, unet_score))
 		
-		'''
-		torchvision.utils.save_image(images.data.cpu(),
-									os.path.join(self.result_path,
-												'%s_valid_%d_image.png'%(self.model_type,epoch+1)))
-		torchvision.utils.save_image(SR.data.cpu(),
-									os.path.join(self.result_path,
-												'%s_valid_%d_SR.png'%(self.model_type,epoch+1)))
-		torchvision.utils.save_image(GT.data.cpu(),
-									os.path.join(self.result_path,
-												'%s_valid_%d_GT.png'%(self.model_type,epoch+1)))
-		'''
+
 
 		return unet_score
 
