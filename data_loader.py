@@ -135,9 +135,9 @@ class H5pyDataset(data.Dataset):
 		gt    = Image.fromarray(gt.astype(np.uint8))
 		fp.close()
 
-		if self.exp_name == 'axis0':
-			image = T.functional.crop(image, 100, 122, 256, 256)
-			gt    = T.functional.crop(gt   , 100, 122, 256, 256)
+		#if self.exp_name == 'axis0':
+		#	image = T.functional.crop(image, 100, 122, 256, 256)
+		#	gt    = T.functional.crop(gt   , 100, 122, 256, 256)
 
 
 		image = T.ToTensor()(image)

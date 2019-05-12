@@ -180,7 +180,6 @@ class Solver(object):
 			images = images.to(self.device)
 			GT = GT.to(self.device)
 			SR = torch.sigmoid(self.unet(images))
-			torch.nn.loss
 
 			metrics.add(Metrics(SR, GT))
 			length += images.size(0)
