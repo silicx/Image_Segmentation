@@ -263,6 +263,8 @@ class Solver(object):
 
 		lr = self.lr
 		best_unet_score = 0.
+
+		unet_score = self.validate()
 		
 		for epoch in range(self.num_epochs):
 			# train
