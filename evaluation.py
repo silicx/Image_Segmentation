@@ -3,7 +3,7 @@ import torch
 # SR : Segmentation Result
 # GT : Ground Truth
 
-class Metrics(object):
+class Metrics:
     def __init__(self, SR=None, GT=None):
         self.acc = 0.		# Accuracy
         self.SE  = 0.		# Sensitivity (Recall)
@@ -14,26 +14,24 @@ class Metrics(object):
         self.DC  = 0.		# Dice Coefficient
 
         if SR is not None and GT is not None:
-            SR = torch.split(SR, 1, dim=0)
-            GT = torch.split(GT, 1, dim=0)
-            for i in range(len(SR)):
-                self.acc += get_accuracy(   SR[i], GT[i])
-                self.SE  += get_sensitivity(SR[i], GT[i])
-                self.SP  += get_specificity(SR[i], GT[i])
-                self.PC  += get_precision(  SR[i], GT[i])
-                self.F1  += get_F1(         SR[i], GT[i])
-                self.JS  += get_JS(         SR[i], GT[i])
-                self.DC  += get_DC(         SR[i], GT[i])
+            for i in range(SR.size(0)):
+                self.acc += get_accuracy(   SR[i,...], GT[i,...])
+                self.SE  += get_sensitivity(SR[i,...], GT[i,...])
+                self.SP  += get_specificity(SR[i,...], GT[i,...])
+                self.PC  += get_precision(  SR[i,...], GT[i,...])
+                self.F1  += get_F1(         SR[i,...], GT[i,...])
+                self.JS  += get_JS(         SR[i,...], GT[i,...])
+                self.DC  += get_DC(         SR[i,...], GT[i,...])
 
 
-    def add(self, metrics):
-        self.acc += metrics.acc
-        self.SE  += metrics.SE 
-        self.SP  += metrics.SP 
-        self.PC  += metrics.PC 
-        self.F1  += metrics.F1 
-        self.JS  += metrics.JS 
-        self.DC  += metrics.DC 
+    def add(self, met):
+        self.acc += met.acc
+        self.SE  += met.SE 
+        self.SP  += met.SP 
+        self.PC  += met.PC 
+        self.F1  += met.F1 
+        self.JS  += met.JS 
+        self.DC  += met.DC 
 
     
     def div(self, num):
