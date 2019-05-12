@@ -4,15 +4,15 @@ import torch
 # GT : Ground Truth
 
 class Metrics(object):
-    acc = 0.		# Accuracy
-    SE  = 0.		# Sensitivity (Recall)
-    SP  = 0.		# Specificity
-    PC  = 0. 		# Precision
-    F1  = 0.		# F1 Score
-    JS  = 0.		# Jaccard Similarity
-    DC  = 0.		# Dice Coefficient
-
     def __init__(self, SR=None, GT=None):
+        self.acc = 0.		# Accuracy
+        self.SE  = 0.		# Sensitivity (Recall)
+        self.SP  = 0.		# Specificity
+        self.PC  = 0. 		# Precision
+        self.F1  = 0.		# F1 Score
+        self.JS  = 0.		# Jaccard Similarity
+        self.DC  = 0.		# Dice Coefficient
+
         if SR is not None and GT is not None:
             SR = torch.split(SR, 1, dim=0)
             GT = torch.split(GT, 1, dim=0)
