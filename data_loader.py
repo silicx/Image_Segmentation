@@ -102,7 +102,7 @@ class ImageFolder(data.Dataset):
 
 
 class H5pyDataset(data.Dataset):
-	def __init__(self, root,image_size=224,mode='train',augmentation_prob=0.4):
+	def __init__(self, root,image_size=224,mode='train',augmentation_prob=0.):
 		"""Initializes image paths and preprocessing module."""
 		self.root = root
 		

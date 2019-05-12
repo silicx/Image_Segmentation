@@ -121,9 +121,8 @@ class Solver(object):
 			GT = GT.to(self.device)
 
 			# SR : Segmentation Result
-			SR = self.unet(images)
-			SR_probs = torch.sigmoid(SR)
-			SR_flat = SR_probs.view(SR_probs.size(0),-1)
+			SR = torch.sigmoid(self.unet(images))
+			SR_flat = SR.view(SR.size(0),-1)
 
 			GT_flat = GT.view(GT.size(0),-1)
 			loss = self.criterion(SR_flat,GT_flat)
