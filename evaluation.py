@@ -14,6 +14,7 @@ class Metrics:
         self.DC  = 0.		# Dice Coefficient
 
         if SR is not None and GT is not None:
+            GT = GT.int()
             for i in range(SR.size(0)):
                 self.acc += get_accuracy(   SR[i,...], GT[i,...])
                 self.SE  += get_sensitivity(SR[i,...], GT[i,...])
