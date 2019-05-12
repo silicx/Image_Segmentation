@@ -144,11 +144,10 @@ class Solver(object):
 			logging.info('Iteration {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
 				i+1, len(self.train_loader), loss.item(),
 				delta.acc, delta.SE, delta.PC, delta.DC))
-			
-			SR = SR.cpu()
-			GT = GT.cpu()
 
 			if i%10==0:
+				SR = SR.cpu()
+				GT = GT.cpu()
 				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
 				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
 				sr0.show()
