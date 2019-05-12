@@ -4,7 +4,7 @@ import torch
 # GT : Ground Truth
 
 class Metrics:
-    def __init__(self, SR=None, GT=None):
+    def __init__(self, SR=None, GT=None, threshold=0.5):
         self.acc = 0.		# Accuracy
         self.SE  = 0.		# Sensitivity (Recall)
         self.SP  = 0.		# Specificity
@@ -17,13 +17,13 @@ class Metrics:
             SR = torch.split(SR, 1, dim=0)
             GT = torch.split(GT, 1, dim=0)
             for i in range(len(SR)):
-                self.acc += get_accuracy(   SR[i], GT[i])
-                self.SE  += get_sensitivity(SR[i], GT[i])
-                self.SP  += get_specificity(SR[i], GT[i])
-                self.PC  += get_precision(  SR[i], GT[i])
-                self.F1  += get_F1(         SR[i], GT[i])
-                self.JS  += get_JS(         SR[i], GT[i])
-                self.DC  += get_DC(         SR[i], GT[i])
+                self.acc += get_accuracy(   SR[i], GT[i], threshold)
+                self.SE  += get_sensitivity(SR[i], GT[i], threshold)
+                self.SP  += get_specificity(SR[i], GT[i], threshold)
+                self.PC  += get_precision(  SR[i], GT[i], threshold)
+                self.F1  += get_F1(         SR[i], GT[i], threshold)
+                self.JS  += get_JS(         SR[i], GT[i], threshold)
+                self.DC  += get_DC(         SR[i], GT[i], threshold)
 
 
     def add(self, met):

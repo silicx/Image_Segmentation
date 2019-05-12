@@ -110,6 +110,9 @@ class Solver(object):
 
 
 	def train(self, lr, epoch):
+		threshold = 0.3
+
+
 		self.unet.train(True)
 		epoch_loss = 0
 		
@@ -144,7 +147,7 @@ class Solver(object):
 			SR = SR.detach()
 			GT = GT.detach()
 
-			delta = Metrics(SR, GT)
+			delta = Metrics(SR, GT, threshold)
 			metrics.add(delta)
 			length += images.size(0)
 
@@ -156,7 +159,7 @@ class Solver(object):
 			if i%10==0:
 				SR = SR.cpu()
 				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...]*255)
-				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5)*255)
+				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>threshold)*255)
 				os.makedirs("/content/drive/image_log/", exist_ok=True)
 				sr0.save("/content/drive/image_log/{}_pred.jpg".format(i))
 				srb.save("/content/drive/image_log/{}_pred_bin.jpg".format(i))
