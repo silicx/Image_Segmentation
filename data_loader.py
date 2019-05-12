@@ -128,7 +128,7 @@ class H5pyDataset(data.Dataset):
 			n_channel = fp['data'].shape[2]
 		image = Image.fromarray(np.array(fp['data']))
 		gt    = np.array(fp['annot'])
-		gt    = ((gt>70)&(gt<140))*255
+		gt    = (((gt>70)&(gt<140))*255).astype(np.uint8)
 		gt    = Image.fromarray(gt)
 		fp.close()
 
