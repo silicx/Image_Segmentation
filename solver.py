@@ -119,6 +119,7 @@ class Solver(object):
 		for i, (images, GT) in enumerate(self.train_loader):
 			images = images.to(self.device)
 			GT = GT.to(self.device)
+			GT.detach()
 
 			# SR : Segmentation Result
 			SR = torch.sigmoid(self.unet(images))

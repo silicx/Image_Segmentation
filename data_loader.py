@@ -127,10 +127,6 @@ class H5pyDataset(data.Dataset):
 		else:
 			n_channel = fp['data'].shape[2]
 		image = Image.fromarray(np.array(fp['data']))
-
-		if index%10==0:
-			t = Image.fromarray(np.array(fp['annot'])*255)
-			t.save("/content/drive/image_log/{}_gt_ori.jpg".format(index))
 		gt    = Image.fromarray(np.array(fp['annot']))
 		fp.close()
 
