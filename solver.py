@@ -116,7 +116,6 @@ class Solver(object):
 		length = 0
 
 		for i, (images, GT) in enumerate(self.train_loader):
-			
 			images = images.to(self.device)
 			GT = GT.to(self.device)
 
@@ -137,6 +136,7 @@ class Solver(object):
 			delta = Metrics(SR, GT)
 			metrics.add(delta)
 			length += images.size(0)
+			print(images.shape)
 
 			delta.div(images.size(0))
 			logging.info('Iteration {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
