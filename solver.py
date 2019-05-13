@@ -260,34 +260,38 @@ class Solver(object):
 
 		logging.info("Unet path: {}".format(unet_path))
 
+		if os.path.exists(unet_path):
+			logging.warning("model file exists, test only")
+			self.unet.load_state_dict(torch.load(unet_path))
+			print('%s is Successfully Loaded from %s'%(self.model_type,unet_path))
+		else:
+			lr = self.lr
+			best_unet_score = 0.
 
-		lr = self.lr
-		best_unet_score = 0.
-
-		self.validate()
-		
-		for epoch in range(self.num_epochs):
-			# train
-			self.train(lr, epoch)
+			self.validate()
 			
-			# Decay lr
-			if (epoch+1) > (self.num_epochs - self.num_epochs_decay):
-				lr -= (self.lr / float(self.num_epochs_decay))
-				for param_group in self.optimizer.param_groups:
-					param_group['lr'] = lr
-				print ('Decay learning rate to lr: {}.'.format(lr))
-			
-			# val
-			unet_score = self.validate()
-
-			# Save Best U-Net model
-			if unet_score > best_unet_score:
-				best_unet_score = unet_score
-				best_epoch = epoch
-				best_unet = self.unet.state_dict()
-				print('Best %s model score : %.4f'%(self.model_type,best_unet_score))
-				torch.save(best_unet,unet_path)
-			
+			for epoch in range(self.num_epochs):
+				# train
+				self.train(lr, epoch)
 				
+				# Decay lr
+				if (epoch+1) > (self.num_epochs - self.num_epochs_decay):
+					lr -= (self.lr / float(self.num_epochs_decay))
+					for param_group in self.optimizer.param_groups:
+						param_group['lr'] = lr
+					print ('Decay learning rate to lr: {}.'.format(lr))
+				
+				# val
+				unet_score = self.validate()
+
+				# Save Best U-Net model
+				if unet_score > best_unet_score:
+					best_unet_score = unet_score
+					best_epoch = epoch
+					best_unet = self.unet.state_dict()
+					print('Best %s model score : %.4f'%(self.model_type,best_unet_score))
+					torch.save(best_unet,unet_path)
+		##end else##
+		
 		#===================================== Test ====================================#
 		self.test(unet_path)
