@@ -68,7 +68,7 @@ def get_sensitivity(SR,GT,threshold=0.5):
     if tp_fn == 0:
         return np.nan
     else:
-        return = float(torch.sum(TP))/float(tp_fn) 
+        return float(torch.sum(TP))/float(tp_fn) 
         
 
 def get_specificity(SR,GT,threshold=0.5):
@@ -100,7 +100,7 @@ def get_precision(SR,GT,threshold=0.5):
     if tp_fp == 0:
         return np.nan
     else:
-        return = float(torch.sum(TP))/float(tp_fp)
+        return float(torch.sum(TP))/float(tp_fp)
 
 
 def get_F1(SR,GT,threshold=0.5):
