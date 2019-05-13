@@ -234,7 +234,7 @@ class Solver(object):
 			metrics.div(length)
 			unet_score = metrics.JS + metrics.DC
 
-			with open(os.path.join(self.result_path,'result.cvs'), 'a', encoding='utf-8', newline='') as f:
+			with open(os.path.join(self.result_path,'result.csv'), 'a', encoding='utf-8', newline='') as f:
 				wr = csv.writer(f)
 				wr.writerow([
 					metrics.acc,
