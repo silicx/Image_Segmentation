@@ -174,8 +174,6 @@ class Solver(object):
 			metrics = Metrics()
 			length=0
 			for i, (images, GT) in enumerate(self.valid_loader):
-				logging.info("Iteration [{}/{}]".format(i+1, len(self.valid_loader)))
-
 				if i%50==0:
 					gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
 					im0 = torchvision.transforms.ToPILImage()(images[0, ...])
@@ -202,7 +200,7 @@ class Solver(object):
 			metrics.div(length)
 			unet_score = metrics.JS + metrics.DC
 
-			logging.info('Validation, unet_score={:.4f}'.format(unet_score, str(metrics)))
+			logging.info('Validation, unet_score={:.4f}, {}'.format(unet_score, str(metrics)))
 		
 
 			return unet_score
@@ -221,8 +219,6 @@ class Solver(object):
 			metrics = Metrics()
 			length=0
 			for i, (images, GT) in enumerate(self.valid_loader):
-				logging.info("Iteration [{}/{}]".format(i+1, len(self.valid_loader)))
-
 				images = images.to(self.device)
 				GT = GT.to(self.device)
 				SR = torch.sigmoid(self.unet(images))
