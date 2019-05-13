@@ -212,39 +212,40 @@ class Solver(object):
 
 
 	def test(self, unet_path):
-		del self.unet
-		self.build_model()
-		self.unet.load_state_dict(torch.load(unet_path))
-		
-		self.unet.train(False)
-		self.unet.eval()
-
-		metrics = Metrics()
-		length=0
-		for i, (images, GT) in enumerate(self.valid_loader):
-
-			images = images.to(self.device)
-			GT = GT.to(self.device)
-			SR = torch.sigmoid(self.unet(images))
+		with torch.no_grad():
+			del self.unet
+			self.build_model()
+			self.unet.load_state_dict(torch.load(unet_path))
 			
-			metrics.add(Metrics(SR, GT))
-			length += images.size(0)
-				
-		metrics.div(length)
-		unet_score = metrics.JS + metrics.DC
+			self.unet.train(False)
+			self.unet.eval()
 
-		with open(os.path.join(self.result_path,'result.cvs'), 'a', encoding='utf-8', newline='') as f:
-			wr = csv.writer(f)
-			wr.writerow([
-				metrics.acc,
-				metrics.SE,
-				metrics.SP,
-				metrics.PC,
-				metrics.F1,
-				metrics.JS,
-				metrics.DC,
-				unet_score,
-				])
+			metrics = Metrics()
+			length=0
+			for i, (images, GT) in enumerate(self.valid_loader):
+
+				images = images.to(self.device)
+				GT = GT.to(self.device)
+				SR = torch.sigmoid(self.unet(images))
+				
+				metrics.add(Metrics(SR, GT))
+				length += images.size(0)
+					
+			metrics.div(length)
+			unet_score = metrics.JS + metrics.DC
+
+			with open(os.path.join(self.result_path,'result.cvs'), 'a', encoding='utf-8', newline='') as f:
+				wr = csv.writer(f)
+				wr.writerow([
+					metrics.acc,
+					metrics.SE,
+					metrics.SP,
+					metrics.PC,
+					metrics.F1,
+					metrics.JS,
+					metrics.DC,
+					unet_score,
+					])
 
 
 	def run(self):
