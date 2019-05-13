@@ -250,12 +250,7 @@ class Solver(object):
 	def run(self):
 		"""Train encoder, generator and discriminator."""
 		
-		unet_path = os.path.join(self.model_path, '{}-{}-{:.4f}-{}-{:.4f}.pkl'.format(
-			self.model_type,
-			self.num_epochs,
-			self.lr,
-			self.num_epochs_decay,
-			self.augmentation_prob))
+		unet_path = os.path.join(self.model_path, 'best_model.pkl')
 
 
 		logging.info("Unet path: {}".format(unet_path))
