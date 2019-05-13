@@ -234,14 +234,14 @@ class Solver(object):
 			unet_score = metrics.JS + metrics.DC
 
 			with open(os.path.join(self.result_path,'result.txt'), 'a', encoding='utf-8', newline='') as f:
-				f.write("acc: {} \n".format(metrics.acc)
-				f.write("SE: {} \n".format(metrics.SE)
-				f.write("SP: {} \n".format(metrics.SP)
-				f.write("PC: {} \n".format(metrics.PC)
-				f.write("F1: {} \n".format(metrics.F1)
-				f.write("JS: {} \n".format(metrics.JS)
-				f.write("DC: {} \n".format(metrics.DC)
-				f.write("unet_score: {} \n".format(unet_score)
+				f.write("acc: {} \n".format(metrics.acc))
+				f.write("SE: {} \n".format(metrics.SE))
+				f.write("SP: {} \n".format(metrics.SP))
+				f.write("PC: {} \n".format(metrics.PC))
+				f.write("F1: {} \n".format(metrics.F1))
+				f.write("JS: {} \n".format(metrics.JS))
+				f.write("DC: {} \n".format(metrics.DC))
+				f.write("unet_score: {} \n".format(unet_score))
 
 
 	def run(self):
