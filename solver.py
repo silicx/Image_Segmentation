@@ -114,7 +114,6 @@ class Solver(object):
 		epoch_loss = 0
 		
 		metrics = Metrics()
-		length = 0
 
 		for i, (images, GT) in enumerate(self.train_loader):
 			if i%50==0:
@@ -146,9 +145,7 @@ class Solver(object):
 
 			delta = Metrics(SR, GT)
 			metrics.add(delta)
-			length += images.size(0)
-
-			delta.div(images.size(0))
+			
 			logging.info('Iteration {}/{}, Loss={:.4f}, {}'.format(
 				i+1, len(self.train_loader), loss.item(),str(delta)))
 
@@ -161,7 +158,6 @@ class Solver(object):
 				srb.save("/content/drive/image_log/train/{}_pred_bin.jpg".format(i))
 			
 
-		metrics.div(length)
 		logging.info('Epoch {}/{}, Loss={:.4f}, {}'.format(
 			epoch+1, self.num_epochs, epoch_loss, str(metrics)))
 
@@ -172,7 +168,7 @@ class Solver(object):
 			self.unet.eval()
 
 			metrics = Metrics()
-			length=0
+			
 			for i, (images, GT) in enumerate(self.valid_loader):
 				if i%50==0:
 					gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
@@ -186,8 +182,6 @@ class Solver(object):
 				SR = torch.sigmoid(self.unet(images))
 
 				metrics.add(Metrics(SR, GT))
-				length += images.size(0)
-
 
 				if i%50==0:
 					SR = SR.cpu()
@@ -197,8 +191,7 @@ class Solver(object):
 					sr0.save("/content/drive/image_log/valid/{}_pred.jpg".format(i))
 					srb.save("/content/drive/image_log/valid/{}_pred_bin.jpg".format(i))
 				
-			metrics.div(length)
-			unet_score = metrics.JS + metrics.DC
+			unet_score = np.nanmean(np.array(metrics.JS)) + np.nanmean(np.array(metrics.DC))
 
 			logging.info('Validation, unet_score={:.4f}, {}'.format(unet_score, str(metrics)))
 		
@@ -217,26 +210,19 @@ class Solver(object):
 			self.unet.eval()
 
 			metrics = Metrics()
-			length=0
+			
 			for i, (images, GT) in enumerate(self.valid_loader):
 				images = images.to(self.device)
 				GT = GT.to(self.device)
 				SR = torch.sigmoid(self.unet(images))
 				
 				metrics.add(Metrics(SR, GT))
-				length += images.size(0)
-					
-			metrics.div(length)
-			unet_score = metrics.JS + metrics.DC
+				
+
+			unet_score = np.nanmean(np.array(metrics.JS)) + np.nanmean(np.array(metrics.DC))
 
 			with open(os.path.join(self.result_path,'result.txt'), 'a', encoding='utf-8', newline='') as f:
-				f.write("acc: {} \n".format(metrics.acc))
-				f.write("SE: {} \n".format(metrics.SE))
-				f.write("SP: {} \n".format(metrics.SP))
-				f.write("PC: {} \n".format(metrics.PC))
-				f.write("F1: {} \n".format(metrics.F1))
-				f.write("JS: {} \n".format(metrics.JS))
-				f.write("DC: {} \n".format(metrics.DC))
+				f.write(str(metrics)+'\n')
 				f.write("unet_score: {} \n".format(unet_score))
 
 
