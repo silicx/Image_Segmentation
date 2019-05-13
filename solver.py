@@ -149,9 +149,8 @@ class Solver(object):
 			length += images.size(0)
 
 			delta.div(images.size(0))
-			logging.info('Iteration {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
-				i+1, len(self.train_loader), loss.item(),
-				delta.acc, delta.SE, delta.PC, delta.DC))
+			logging.info('Iteration {}/{}, Loss={:.4f}, {}'.format(
+				i+1, len(self.train_loader), loss.item(),str(delta)))
 
 			if i%50==0:
 				SR = SR.cpu()
@@ -163,10 +162,8 @@ class Solver(object):
 			
 
 		metrics.div(length)
-		logging.info('Epoch {}/{}, Loss={:.4f}, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}'.format(
-			epoch+1, self.num_epochs, epoch_loss,
-			metrics.acc, metrics.SE, metrics.PC, metrics.DC))
-		del metrics
+		logging.info('Epoch {}/{}, Loss={:.4f}, {}'.format(
+			epoch+1, self.num_epochs, epoch_loss, str(metrics)))
 
 
 	def validate(self):
@@ -177,6 +174,8 @@ class Solver(object):
 			metrics = Metrics()
 			length=0
 			for i, (images, GT) in enumerate(self.valid_loader):
+				logging.info("Iteration [{}/{}]".format(i+1, len(self.valid_loader)))
+
 				if i%50==0:
 					gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
 					im0 = torchvision.transforms.ToPILImage()(images[0, ...])
@@ -203,8 +202,7 @@ class Solver(object):
 			metrics.div(length)
 			unet_score = metrics.JS + metrics.DC
 
-			logging.info('Validation, Acc={:.4f}, SE={:.4f}, PC={:.4f}, DC={:.4f}, unet_score={:.4f}'.format(
-				metrics.acc, metrics.SE, metrics.PC, metrics.DC, unet_score))
+			logging.info('Validation, unet_score={:.4f}'.format(unet_score, str(metrics)))
 		
 
 			return unet_score
@@ -223,6 +221,7 @@ class Solver(object):
 			metrics = Metrics()
 			length=0
 			for i, (images, GT) in enumerate(self.valid_loader):
+				logging.info("Iteration [{}/{}]".format(i+1, len(self.valid_loader)))
 
 				images = images.to(self.device)
 				GT = GT.to(self.device)
@@ -234,18 +233,15 @@ class Solver(object):
 			metrics.div(length)
 			unet_score = metrics.JS + metrics.DC
 
-			with open(os.path.join(self.result_path,'result.csv'), 'a', encoding='utf-8', newline='') as f:
-				wr = csv.writer(f)
-				wr.writerow([
-					metrics.acc,
-					metrics.SE,
-					metrics.SP,
-					metrics.PC,
-					metrics.F1,
-					metrics.JS,
-					metrics.DC,
-					unet_score,
-					])
+			with open(os.path.join(self.result_path,'result.txt'), 'a', encoding='utf-8', newline='') as f:
+				f.write("acc: {} \n".format(metrics.acc)
+				f.write("SE: {} \n".format(metrics.SE)
+				f.write("SP: {} \n".format(metrics.SP)
+				f.write("PC: {} \n".format(metrics.PC)
+				f.write("F1: {} \n".format(metrics.F1)
+				f.write("JS: {} \n".format(metrics.JS)
+				f.write("DC: {} \n".format(metrics.DC)
+				f.write("unet_score: {} \n".format(unet_score)
 
 
 	def run(self):

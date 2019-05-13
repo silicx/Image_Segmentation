@@ -45,6 +45,10 @@ class Metrics:
         self.JS  /=  num
         self.DC  /=  num
 
+    def __str__(self):
+        return 'Acc={:.4f}, SE={:.4f}, PC={:.4f}, JS={:.4f}, DC={:.4f}'.format(
+				self.acc, self.SE, self.PC, self.JS, self.DC))
+
 
 
 def get_accuracy(SR,GT,threshold=0.5):
