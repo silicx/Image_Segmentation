@@ -48,13 +48,13 @@ class H5pyDataset(data.Dataset):
 		if self.data_mode=='binary':
 			gt = gt>0
 			gt = gt*255
-			gt = torch.Tensor()(gt)
+			gt = torch.Tensor(gt)
 		elif self.data_mode=='onehot':
 			expanded = []
 			for i in range(20):
 				expanded.append(gt==i)
 			gt = np.stack(expanded)
-			gt = torch.Tensor()(gt)
+			gt = torch.Tensor(gt)
 		else:
 			raise NotImplementedError("undefined data mode")
 
