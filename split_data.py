@@ -5,7 +5,7 @@ def split_data(config, override=False):
     img_dir = config.data_root_path
     logging.info(img_dir)
     if override:
-        os.removedirs(img_dir)
+        shutil.rmtree(img_dir)
     else:
         assert not os.path.exists(img_dir), "target folder exists"
 
