@@ -125,8 +125,7 @@ class Solver(object):
 			images = images.to(self.device)
 			GT = GT.to(self.device)
 
-			SR = torch.nn.Softmax()(self.unet(images))
-			print(GT.shape, SR.shape)
+			SR = torch.nn.Softmax(dim=1)(self.unet(images))
 			SR_flat = SR.view(SR.size(0),-1)
 
 			GT_flat = GT.view(GT.size(0),-1)
@@ -149,7 +148,7 @@ class Solver(object):
 
 			if i%self.image_log_freq==0:
 				SR = SR.cpu()
-				store_classification_image(SR, image_log_dir, "{}_sg.jpg".format(i), self.output_ch)
+				store_classification_image(SR[0, ...], image_log_dir, "{}_sg.jpg".format(i), self.output_ch)
 			
 
 		logging.info('Epoch {}/{}, Loss={:.4f}, {}'.format(
@@ -171,13 +170,13 @@ class Solver(object):
 
 				images = images.to(self.device)
 				GT = GT.to(self.device)
-				SR = torch.nn.Softmax()(self.unet(images))
+				SR = torch.nn.Softmax(dim=1)(self.unet(images))
 
 				metrics.add(Metrics(SR, GT))
 
 				if i%self.image_log_freq==0:
 					SR = SR.cpu()
-					store_classification_image(SR, image_log_dir, "{}_sg.jpg".format(i), self.output_ch)
+					store_classification_image(SR[0, ...], image_log_dir, "{}_sg.jpg".format(i), self.output_ch)
 				
 			unet_score = np.nanmean(np.array(metrics.JS)) + np.nanmean(np.array(metrics.DC))
 
