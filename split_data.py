@@ -1,10 +1,13 @@
 import numpy as np
 import h5py, os, cv2, random, json, shutil, logging
 
-def split_data(config):
+def split_data(config, override=False):
     img_dir = config.data_root_path
     logging.info(img_dir)
-    assert not os.path.exists(img_dir), "target folder exists"
+    if override:
+        os.removedirs(img_dir)
+    else:
+        assert not os.path.exists(img_dir), "target folder exists"
 
     
     split_dirs = {x: os.path.join(img_dir, x) for x in ['train', 'test', 'valid']}
