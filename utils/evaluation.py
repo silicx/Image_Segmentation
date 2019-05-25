@@ -73,8 +73,6 @@ def get_sensitivity(SR,GT,threshold=0.5):
     # Sensitivity == Recall
     #SR = SR > threshold
 
-    # TP : True Positive
-    # FN : False Negative
     TP = ((SR==1)+(GT==1))==2
     FN = ((SR==0)+(GT==1))==2
 
@@ -88,8 +86,6 @@ def get_sensitivity(SR,GT,threshold=0.5):
 def get_specificity(SR,GT,threshold=0.5):
     #SR = SR > threshold
 
-    # TN : True Negative
-    # FP : False Positive
     TN = ((SR==0)+(GT==0))==2
     FP = ((SR==1)+(GT==0))==2
 
@@ -103,8 +99,6 @@ def get_specificity(SR,GT,threshold=0.5):
 def get_precision(SR,GT,threshold=0.5):
     #SR = SR > threshold
 
-    # TP : True Positive
-    # FP : False Positive
     TP = ((SR==1)+(GT==1))==2
     FP = ((SR==1)+(GT==0))==2
 
@@ -128,7 +122,6 @@ def get_F1(SR,GT,threshold=0.5):
 
 
 def get_JS(SR,GT,threshold=0.5):
-    # JS : Jaccard similarity
     #SR = SR > threshold
     
     Inter = torch.sum((SR+GT)==2)
@@ -141,7 +134,6 @@ def get_JS(SR,GT,threshold=0.5):
 
 
 def get_DC(SR,GT,threshold=0.5):
-    # DC : Dice Coefficient
     #SR = SR > threshold
 
     Inter = torch.sum((SR+GT)==2)
