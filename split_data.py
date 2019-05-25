@@ -24,12 +24,12 @@ def split_data(config):
         l = np.array(fp['label']).astype(np.uint8)
 
 
-        if config.exp_name == "axis1":
+        if config.name == "axis1":
             r = r[r.shape[0]%16: ,...]
             l = l[l.shape[0]%16: ,...]
             r = np.transpose(r, (1,0,2,3))
             l = np.transpose(l, (1,0,2))
-        elif config.exp_name == 'axis2':
+        elif config.name == 'axis2':
             r = r[r.shape[0]%16: ,...]
             l = l[l.shape[0]%16: ,...]
             r = np.transpose(r, (2,0,1,3))
