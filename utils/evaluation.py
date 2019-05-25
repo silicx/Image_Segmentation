@@ -5,7 +5,7 @@ import numpy as np
 # GT : Ground Truth
 
 class Metrics:
-    def __init__(self, SR=None, GT=None, threshold=0.5):
+    def __init__(self, data_mode, SR=None, GT=None, threshold=0.5):
         self.acc = []		# Accuracy
         self.SE  = []		# Sensitivity (Recall)
         self.SP  = []		# Specificity
@@ -13,18 +13,26 @@ class Metrics:
         self.F1  = []		# F1 Score
         self.JS  = []		# Jaccard Similarity
         self.DC  = []		# Dice Coefficient
+        self.class_acc = [] # classification acc
+
+        self.data_mode = data_mode
 
         if SR is not None and GT is not None:
-            SR = torch.split(SR, 1, dim=0)
-            GT = torch.split(GT, 1, dim=0)
+            SR = torch.split(SR, 1, dim=1)
+            GT = torch.split(GT, 1, dim=1)
             for i in range(len(SR)):
-                self.acc.append( get_accuracy(   SR[i], GT[i], threshold) )
-                self.SE.append(  get_sensitivity(SR[i], GT[i], threshold) )
-                self.SP.append(  get_specificity(SR[i], GT[i], threshold) )
-                self.PC.append(  get_precision(  SR[i], GT[i], threshold) )
-                self.F1.append(  get_F1(         SR[i], GT[i], threshold) )
-                self.JS.append(  get_JS(         SR[i], GT[i], threshold) )
-                self.DC.append(  get_DC(         SR[i], GT[i], threshold) )
+                sr, gt = torch.argmax(SR[i], dim=0), GT[i]
+                self.class_acc.append(get_classfication_acc(sr, gt))
+
+                sr, gt = sr>0, gt>0
+
+                self.acc.append(get_accuracy(   sr, gt, threshold) )
+                self.SE.append( get_sensitivity(sr, gt, threshold) )
+                self.SP.append( get_specificity(sr, gt, threshold) )
+                self.PC.append( get_precision(  sr, gt, threshold) )
+                self.F1.append( get_F1(         sr, gt, threshold) )
+                self.JS.append( get_JS(         sr, gt, threshold) )
+                self.DC.append( get_DC(         sr, gt, threshold) )
 
 
     def add(self, met):
@@ -45,10 +53,14 @@ class Metrics:
                 np.nanmean(np.array(self.DC)))
 
 
+def get_classfication_acc(SR, GT):
+    corr = torch.sum((SR==GT)&(GT>0))
+    size = torch.sum(GT!=0)
+    return float(corr)/float(size)
+
 
 def get_accuracy(SR,GT,threshold=0.5):
-    SR = (SR > threshold)
-    GT = (GT == torch.max(GT))
+    #SR = (SR > threshold)
     corr = torch.sum(SR==GT)
     tensor_size = SR.size(0)*SR.size(1)*SR.size(2)*SR.size(3)
     acc = float(corr)/float(tensor_size)
@@ -57,8 +69,7 @@ def get_accuracy(SR,GT,threshold=0.5):
 
 def get_sensitivity(SR,GT,threshold=0.5):
     # Sensitivity == Recall
-    SR = SR > threshold
-    GT = GT == torch.max(GT)
+    #SR = SR > threshold
 
     # TP : True Positive
     # FN : False Negative
@@ -73,8 +84,7 @@ def get_sensitivity(SR,GT,threshold=0.5):
         
 
 def get_specificity(SR,GT,threshold=0.5):
-    SR = SR > threshold
-    GT = GT == torch.max(GT)
+    #SR = SR > threshold
 
     # TN : True Negative
     # FP : False Positive
@@ -89,8 +99,7 @@ def get_specificity(SR,GT,threshold=0.5):
         
 
 def get_precision(SR,GT,threshold=0.5):
-    SR = SR > threshold
-    GT = GT == torch.max(GT)
+    #SR = SR > threshold
 
     # TP : True Positive
     # FP : False Positive
@@ -118,8 +127,7 @@ def get_F1(SR,GT,threshold=0.5):
 
 def get_JS(SR,GT,threshold=0.5):
     # JS : Jaccard similarity
-    SR = SR > threshold
-    GT = GT == torch.max(GT)
+    #SR = SR > threshold
     
     Inter = torch.sum((SR+GT)==2)
     Union = torch.sum((SR+GT)>=1)
@@ -132,8 +140,7 @@ def get_JS(SR,GT,threshold=0.5):
 
 def get_DC(SR,GT,threshold=0.5):
     # DC : Dice Coefficient
-    SR = SR > threshold
-    GT = GT == torch.max(GT)
+    #SR = SR > threshold
 
     Inter = torch.sum((SR+GT)==2)
     Sum   = torch.sum(SR)+torch.sum(GT)

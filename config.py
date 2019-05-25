@@ -8,7 +8,7 @@ class Configuration:
         
         # training hyper-parameters
         self.img_ch             = 3
-        self.output_ch          = 1
+        self.output_ch          = 2
         self.num_epochs         = 10
         self.num_epochs_decay   = 100
         
@@ -28,7 +28,7 @@ class Configuration:
         # misc
         self.mode               = 'train'
         self.model_type         = 'U_Net'     # 'U_Net/R2U_Net/AttU_Net/R2AttU_Net'
-        self.data_mode          = 'binary'       # binary/onehot
+        #self.data_mode          = 'binary'       # binary/multiple
         
         self.model_path         = '/content/drive/models/{}'.format(exp_name)
         self.h5data_path        = '/content/drive/h5_8b'

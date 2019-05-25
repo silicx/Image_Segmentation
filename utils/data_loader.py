@@ -12,7 +12,7 @@ from torchvision.transforms import functional as F
 
 
 class H5pyDataset(data.Dataset):
-	def __init__(self, root, exp_name, image_size, mode, data_mode):
+	def __init__(self, root, exp_name, image_size, mode):
 		"""Initializes image paths and preprocessing module."""
 		self.root = root
 		
@@ -20,7 +20,7 @@ class H5pyDataset(data.Dataset):
 		self.image_paths = list(map(lambda x: os.path.join(root, x), os.listdir(root)))
 		self.image_size = image_size
 		self.mode = mode
-		self.data_mode = data_mode
+		assert out_ch in [2, 20]
 		self.RotationDegree = [0,90,180,270]
 
 		assert exp_name in ['axis0', 'axis1', 'axis2']
@@ -45,18 +45,7 @@ class H5pyDataset(data.Dataset):
 		image = T.ToTensor()(image)
 		image = T.Normalize((.5,)*n_channel, (.5,)*n_channel)(image)
 
-		if self.data_mode=='binary':
-			gt = gt>0
-			gt = gt*255
-			gt = torch.Tensor(gt)
-		elif self.data_mode=='onehot':
-			expanded = []
-			for i in range(20):
-				expanded.append(gt==i)
-			gt = np.stack(expanded)
-			gt = torch.Tensor(gt)
-		else:
-			raise NotImplementedError("undefined data mode")
+		gt = torch.Tensor(gt)
 
 		return image, gt
 
@@ -73,8 +62,7 @@ def get_loader(config, mode='train'):
 		exp_name = config.name,
 		root = os.path.join(config.data_root_path, mode),
 		image_size =config.image_size, 
-		mode=mode,
-		data_mode=config.data_mode)
+		mode=mode)
 	
 	data_loader = data.DataLoader(
 		dataset=dataset,

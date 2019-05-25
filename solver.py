@@ -52,6 +52,7 @@ class Solver(object):
 		self.model_path = config.model_path
 		self.result_path = config.result_path
 		self.mode = config.mode
+		self.data_mode = config.data_mode
 
 		self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 		self.model_type = config.model_type
@@ -122,8 +123,7 @@ class Solver(object):
 			GT = GT.to(self.device)
 
 
-			# SR : Segmentation Result
-			SR = torch.sigmoid(self.unet(images))
+			SR = torch.nn.Softmax(self.unet(images))
 			SR_flat = SR.view(SR.size(0),-1)
 
 			GT_flat = GT.view(GT.size(0),-1)
@@ -138,7 +138,7 @@ class Solver(object):
 			SR = SR.detach()
 			GT = GT.detach()
 
-			delta = Metrics(SR, GT)
+			delta = Metrics(, SR, GT)
 			metrics.add(delta)
 			
 			logging.info('Iteration {}/{}, Loss={:.4f}, {}'.format(
@@ -174,7 +174,7 @@ class Solver(object):
 
 				images = images.to(self.device)
 				GT = GT.to(self.device)
-				SR = torch.sigmoid(self.unet(images))
+				SR = torch.nn.Softmax(self.unet(images))
 
 				metrics.add(Metrics(SR, GT))
 
@@ -209,7 +209,7 @@ class Solver(object):
 			for i, (images, GT) in enumerate(self.valid_loader):
 				images = images.to(self.device)
 				GT = GT.to(self.device)
-				SR = torch.sigmoid(self.unet(images))
+				SR = torch.nn.Softmax(self.unet(images))
 				
 				metrics.add(Metrics(SR, GT))
 				
