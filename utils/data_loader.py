@@ -12,13 +12,15 @@ from torchvision.transforms import functional as F
 
 
 class H5pyDataset(data.Dataset):
-	def __init__(self, root, exp_name, mode):
+	def __init__(self, root, exp_name, mode, out_ch):
 		"""Initializes image paths and preprocessing module."""
 		self.root = root
 		
 		# GT : Ground Truth
 		self.image_paths = list(map(lambda x: os.path.join(root, x), os.listdir(root)))
 		self.mode = mode
+		assert out_ch in [2, 20]
+		self.out_ch = out_ch
 
 		assert exp_name in ['axis0', 'axis1', 'axis2']
 		self.exp_name = exp_name
@@ -42,6 +44,12 @@ class H5pyDataset(data.Dataset):
 		image = T.ToTensor()(image)
 		image = T.Normalize((.5,)*n_channel, (.5,)*n_channel)(image)
 
+		if self.out_ch == 2:
+			gt = gt>0
+		expand = []
+		for i in range(self.out_ch):
+			expand.append(gt==i)
+		gt = np.stack(expand)
 		gt = torch.Tensor(gt)
 
 		return image, gt
@@ -58,7 +66,8 @@ def get_loader(config, mode='train'):
 	dataset = H5pyDataset(
 		exp_name = config.name,
 		root = os.path.join(config.data_root_path, mode),
-		mode=mode)
+		mode = mode
+		out_ch = config.out_ch)
 	
 	data_loader = data.DataLoader(
 		dataset=dataset,

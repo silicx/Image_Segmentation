@@ -121,8 +121,7 @@ class Solver(object):
 			images = images.to(self.device)
 			GT = GT.to(self.device)
 
-
-			SR = torch.nn.Softmax(self.unet(images))
+			SR = torch.nn.Softmax()(self.unet(images))
 			SR_flat = SR.view(SR.size(0),-1)
 
 			GT_flat = GT.view(GT.size(0),-1)
@@ -173,7 +172,7 @@ class Solver(object):
 
 				images = images.to(self.device)
 				GT = GT.to(self.device)
-				SR = torch.nn.Softmax(self.unet(images))
+				SR = torch.nn.Softmax()(self.unet(images))
 
 				metrics.add(Metrics(SR, GT))
 
@@ -208,7 +207,7 @@ class Solver(object):
 			for i, (images, GT) in enumerate(self.valid_loader):
 				images = images.to(self.device)
 				GT = GT.to(self.device)
-				SR = torch.nn.Softmax(self.unet(images))
+				SR = torch.nn.Softmax()(self.unet(images))
 				
 				metrics.add(Metrics(SR, GT))
 				
@@ -238,7 +237,7 @@ class Solver(object):
 			lr = self.lr
 			best_unet_score = 0.
 
-			self.validate()
+			#self.validate()
 			
 			for epoch in range(self.num_epochs):
 				# train

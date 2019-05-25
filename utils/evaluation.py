@@ -19,7 +19,8 @@ class Metrics:
             SR = torch.split(SR, 1, dim=1)
             GT = torch.split(GT, 1, dim=1)
             for i in range(len(SR)):
-                sr, gt = torch.argmax(SR[i], dim=0), GT[i]
+                sr = torch.argmax(SR[i], dim=0)
+                gt = torch.argmax(GT[i], dim=0)
                 self.class_acc.append(get_classfication_acc(sr, gt))
 
                 sr, gt = sr>0, gt>0
