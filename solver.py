@@ -119,7 +119,7 @@ class Solver(object):
 
 		for i, (images, GT) in enumerate(self.train_loader):
 			if i%self.image_log_freq==0:
-				store_classification_image(GT[0, ...], image_log_dir, "{}_gt.jpg".format(i))
+				store_classification_image(GT[0, ...], image_log_dir, "{}_gt.jpg".format(i), self.output_ch)
 				store_raw_image(images[0, ...], image_log_dir, "{}_img.jpg".format(i))
 
 			images = images.to(self.device)

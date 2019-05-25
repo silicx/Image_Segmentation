@@ -64,7 +64,7 @@ def get_classfication_acc(SR, GT):
 def get_accuracy(SR,GT,threshold=0.5):
     #SR = (SR > threshold)
     corr = torch.sum(SR==GT)
-    tensor_size = SR.size(0)*SR.size(1)*SR.size(2)*SR.size(3)
+    tensor_size = SR.nelement()
     acc = float(corr)/float(tensor_size)
 
     return acc

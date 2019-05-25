@@ -11,11 +11,11 @@ def store_raw_image(tensor, folder, filename):
     im0 = torchvision.transforms.ToPILImage()(tensor)
     im0.save(os.path.join(folder, filename))
 
-def store_classification_image(tensor, folder, filename):
+def store_classification_image(tensor, folder, filename, output_ch):
     os.makedirs(folder, exist_ok=True)
     tensor = torch.argmax(tensor, dim=0).float()
     
-    store_raw_image(tensor/20., folder, filename)
+    store_raw_image(tensor/output_ch, folder, filename)
 
 
 
