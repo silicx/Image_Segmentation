@@ -52,7 +52,6 @@ class Solver(object):
 		self.model_path = config.model_path
 		self.result_path = config.result_path
 		self.mode = config.mode
-		self.data_mode = config.data_mode
 
 		self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 		self.model_type = config.model_type
