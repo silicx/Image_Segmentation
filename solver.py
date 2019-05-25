@@ -1,17 +1,17 @@
-import os
+import os, time, datetime
 import numpy as np
-import time
-import datetime
+from PIL import Image
+import logging, csv
+
 import torch
 import torchvision
 from torch import optim
 from torch.autograd import Variable
 import torch.nn.functional as F
-from evaluation import Metrics
-from network import U_Net,R2U_Net,AttU_Net,R2AttU_Net
-import csv
-import logging
-from PIL import Image
+
+from utils.evaluation import Metrics
+from util.network import U_Net,R2U_Net,AttU_Net,R2AttU_Net
+
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
 
@@ -268,4 +268,50 @@ class Solver(object):
 					print('Best %s model score : %.4f'%(self.model_type,best_unet_score))
 					torch.save(best_unet,unet_path)
 		
-		
+
+
+def main(config):
+    cudnn.benchmark = True
+    if config.model_type not in ['U_Net','R2U_Net','AttU_Net','R2AttU_Net']:
+        print('ERROR!! model_type should be selected in U_Net/R2U_Net/AttU_Net/R2AttU_Net')
+        print('Your input for model_type was %s'%config.model_type)
+        return
+
+    # Create directories if not exist
+    if not os.path.exists(config.model_path):
+        os.makedirs(config.model_path)
+    if not os.path.exists(config.result_path):
+        os.makedirs(config.result_path)
+    config.result_path = os.path.join(config.result_path,config.model_type)
+    if not os.path.exists(config.result_path):
+        os.makedirs(config.result_path)
+
+    print(config)
+        
+    train_loader = data_loader.get_loader(exp_name = exp_name,
+                            image_path=config.train_path,
+                            image_size=config.image_size,
+                            batch_size=config.batch_size,
+                            num_workers=config.num_workers,
+                            mode='train')
+    valid_loader = data_loader.get_loader(exp_name = exp_name,
+                            image_path=config.valid_path,
+                            image_size=config.image_size,
+                            batch_size=config.batch_size,
+                            num_workers=config.num_workers,
+                            mode='valid')
+    test_loader = data_loader.get_loader(exp_name = exp_name,
+                            image_path=config.test_path,
+                            image_size=config.image_size,
+                            batch_size=config.batch_size,
+                            num_workers=config.num_workers,
+                            mode='test')
+
+    solve = solver.Solver(config, train_loader, valid_loader, test_loader)
+
+    
+    # Train and sample the images
+    if config.mode == 'train':
+        solve.run()
+    elif config.mode == 'test':
+        solve.test()
