@@ -13,6 +13,7 @@ import torch.backends.cudnn as cudnn
 from utils.evaluation import Metrics
 from utils.network import U_Net
 from utils.data_loader import get_loader
+from utils.utils import store_raw_image, store_classification_image
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
@@ -110,13 +111,12 @@ class Solver(object):
 		
 		metrics = Metrics()
 
+		image_log_dir = "/content/drive/image_log/train"
+
 		for i, (images, GT) in enumerate(self.train_loader):
 			if i%50==0:
-				gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
-				im0 = torchvision.transforms.ToPILImage()(images[0, ...])
-				os.makedirs("/content/drive/image_log/train", exist_ok=True)
-				gt0.save("/content/drive/image_log/train/{}_gt_or.jpg".format(i))
-				im0.save("/content/drive/image_log/train/{}_im.jpg".format(i))
+				store_classification_image(GT[0, ...], image_log_dir, "{}_gt.jpg".format(i))
+				store_raw_image(images[0, ...], image_log_dir, "{}_img.jpg".format(i))
 
 			images = images.to(self.device)
 			GT = GT.to(self.device)
@@ -144,11 +144,7 @@ class Solver(object):
 
 			if i%50==0:
 				SR = SR.cpu()
-				sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
-				srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5).float())
-				os.makedirs("/content/drive/image_log/train", exist_ok=True)
-				sr0.save("/content/drive/image_log/train/{}_pred.jpg".format(i))
-				srb.save("/content/drive/image_log/train/{}_pred_bin.jpg".format(i))
+				store_classification_image(SR)
 			
 
 		logging.info('Epoch {}/{}, Loss={:.4f}, {}'.format(
