@@ -16,11 +16,10 @@ class Metrics:
         self.class_acc = [] # classification acc
 
         if SR is not None and GT is not None:
-            print(SR.shape)
             SR = torch.split(SR, 1, dim=0)
             GT = torch.split(GT, 1, dim=0)
             for i in range(len(SR)):
-                print(SR[i].shape)
+                sr, gt = sr.reshape(sr.shape[1:]), gt.reshape(gt.shape[1:])
                 sr = torch.argmax(SR[i], dim=0)
                 gt = torch.argmax(GT[i], dim=0)
                 self.class_acc.append(get_classfication_acc(sr, gt))
