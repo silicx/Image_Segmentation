@@ -20,6 +20,7 @@ class H5pyDataset(data.Dataset):
 		self.image_paths = list(map(lambda x: os.path.join(root, x), os.listdir(root)))
 		self.image_size = image_size
 		self.mode = mode
+		self.data_mode = data_mode
 		self.RotationDegree = [0,90,180,270]
 
 		assert exp_name in ['axis0', 'axis1', 'axis2']
@@ -44,16 +45,18 @@ class H5pyDataset(data.Dataset):
 		image = T.ToTensor()(image)
 		image = T.Normalize((.5,)*n_channel, (.5,)*n_channel)(image)
 
-		if data_mode=='binary':
+		if self.data_mode=='binary':
 			gt = gt>0
 			gt = gt*255
 			gt = torch.Tensor()(gt)
-		elif data_mode=='onehot':
+		elif self.data_mode=='onehot':
 			expanded = []
 			for i in range(20):
 				expanded.append(gt==i)
 			gt = np.stack(expanded)
 			gt = torch.Tensor()(gt)
+		else:
+			raise NotImplementedError("undefined data mode")
 
 		return image, gt
 
