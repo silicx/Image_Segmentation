@@ -11,7 +11,8 @@ def split_data(config, override=False):
     img_dir = config.data_root_path
     logging.info(img_dir)
     if override:
-        shutil.rmtree(img_dir)
+        if os.path.exists(img_dir):
+            shutil.rmtree(img_dir)
     else:
         assert not os.path.exists(img_dir), "target folder exists"
 
@@ -28,8 +29,8 @@ def split_data(config, override=False):
 
         fp = h5py.File(os.path.join(config.h5data_path, "case{}.h5".format(ind)), 'r')
 
-        r = np.array(fp['data'])
-        r = np.stack([r], axis=3).astype(np.uint8)
+        r = np.array(fp['data']).astype(np.uint8)
+        #r = np.stack([r], axis=3)
         l = np.array(fp['annot']).astype(np.uint8)
 
 
