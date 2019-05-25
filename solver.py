@@ -63,7 +63,9 @@ class Solver(object):
 	def build_model(self):
 		"""Build generator and discriminator."""
 		if self.model_type =='U_Net':
-			self.unet = U_Net(img_ch=3,output_ch=1)
+			self.unet = U_Net(
+				img_ch=self.img_ch,
+				output_ch=self.output_ch)
 			
 
 		self.optimizer = optim.Adam(list(self.unet.parameters()),

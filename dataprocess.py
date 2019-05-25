@@ -29,7 +29,7 @@ def split_data(config, override=False):
         fp = h5py.File(os.path.join(config.h5data_path, "case{}.h5".format(ind)), 'r')
 
         r = np.array(fp['data'])
-        r = np.stack([r,r,r], axis=3).astype(np.uint8)
+        r = np.stack([r], axis=3).astype(np.uint8)
         l = np.array(fp['annot']).astype(np.uint8)
 
 

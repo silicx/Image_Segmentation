@@ -4,7 +4,7 @@ class Configuration:
         self.name               = exp_name
         
         # training hyper-parameters
-        self.img_ch             = 3
+        self.img_ch             = 1
         self.output_ch          = 2
         self.num_epochs         = 10
         self.num_epochs_decay   = 100
