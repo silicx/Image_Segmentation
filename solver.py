@@ -138,7 +138,7 @@ class Solver(object):
 			SR = SR.detach()
 			GT = GT.detach()
 
-			delta = Metrics(, SR, GT)
+			delta = Metrics(SR, GT)
 			metrics.add(delta)
 			
 			logging.info('Iteration {}/{}, Loss={:.4f}, {}'.format(
