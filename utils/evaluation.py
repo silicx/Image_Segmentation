@@ -16,8 +16,8 @@ class Metrics:
         self.class_acc = [] # classification acc
 
         if SR is not None and GT is not None:
-            SR = torch.split(SR, 1, dim=1)
-            GT = torch.split(GT, 1, dim=1)
+            SR = torch.split(SR, 1, dim=0)
+            GT = torch.split(GT, 1, dim=0)
             for i in range(len(SR)):
                 sr = torch.argmax(SR[i], dim=0)
                 gt = torch.argmax(GT[i], dim=0)
