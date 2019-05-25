@@ -2,9 +2,9 @@ import numpy as np
 import h5py, os, cv2, random, json, shutil, logging
 
 def split_data(config):
-    img_dir = os.path.join(config.data_root_path, config.name)
+    img_dir = config.data_root_path
     logging.info(img_dir)
-    assert os.path.exists(img_dir), "target folder exists"
+    assert not os.path.exists(img_dir), "target folder exists"
 
     
     split_dirs = {x: os.path.join(img_dir, x) for x in ['train', 'test', 'valid']}
