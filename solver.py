@@ -8,6 +8,7 @@ import torchvision
 from torch import optim
 from torch.autograd import Variable
 import torch.nn.functional as F
+import torch.backends.cudnn as cudnn
 
 from utils.evaluation import Metrics
 from utils.network import U_Net
