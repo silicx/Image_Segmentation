@@ -1,5 +1,6 @@
 class Configuration:
     def __init__(self, exp_name):
+        assert exp_name in ['axis0', 'axis1', 'axis2']
         self.name               = exp_name
         
         # model hyper-parameters

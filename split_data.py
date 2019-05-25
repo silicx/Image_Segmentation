@@ -2,7 +2,8 @@ import numpy as np
 import h5py, os, cv2, random, json, shutil
 
 def split_data(config):
-    img_dir = config.data_root_path
+    img_dir = os.path.join(config.data_root_path, config.name)
+    logging.info(img_dir)
     assert os.path.exists(img_dir), "target folder exists"
 
     
