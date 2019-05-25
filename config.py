@@ -3,9 +3,6 @@ class Configuration:
         assert exp_name in ['axis0', 'axis1', 'axis2']
         self.name               = exp_name
         
-        # model hyper-parameters
-        self.image_size         = None
-        
         # training hyper-parameters
         self.img_ch             = 3
         self.output_ch          = 2

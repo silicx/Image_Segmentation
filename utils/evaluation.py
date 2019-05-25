@@ -5,7 +5,7 @@ import numpy as np
 # GT : Ground Truth
 
 class Metrics:
-    def __init__(self, data_mode, SR=None, GT=None, threshold=0.5):
+    def __init__(self, SR=None, GT=None, threshold=0.5):
         self.acc = []		# Accuracy
         self.SE  = []		# Sensitivity (Recall)
         self.SP  = []		# Specificity
@@ -14,8 +14,6 @@ class Metrics:
         self.JS  = []		# Jaccard Similarity
         self.DC  = []		# Dice Coefficient
         self.class_acc = [] # classification acc
-
-        self.data_mode = data_mode
 
         if SR is not None and GT is not None:
             SR = torch.split(SR, 1, dim=1)
