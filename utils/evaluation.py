@@ -55,7 +55,10 @@ class Metrics:
 def get_classfication_acc(SR, GT):
     corr = torch.sum((SR==GT)&(GT>0))
     size = torch.sum(GT!=0)
-    return float(corr)/float(size)
+    if size==0:
+        return np.nan
+    else:
+        return float(corr)/float(size)
 
 
 def get_accuracy(SR,GT,threshold=0.5):
