@@ -69,7 +69,7 @@ def get_loader(config, mode='train'):
 	
 	dataset = H5pyDataset(
 		exp_name = config.name,
-		root = config.image_path,
+		root = os.path.join(config.data_root_path, mode),
 		image_size =config.image_size, 
 		mode=mode,
 		data_mode=config.data_mode)
