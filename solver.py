@@ -144,7 +144,7 @@ class Solver(object):
 
 			if i%50==0:
 				SR = SR.cpu()
-				store_classification_image(SR)
+				store_classification_image(SR, image_log_dir, "{}_sg.jpg".format(i))
 			
 
 		logging.info('Epoch {}/{}, Loss={:.4f}, {}'.format(
