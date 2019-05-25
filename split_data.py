@@ -1,5 +1,5 @@
 import numpy as np
-import h5py, os, cv2, random, json, shutil
+import h5py, os, cv2, random, json, shutil, logging
 
 def split_data(config):
     img_dir = os.path.join(config.data_root_path, config.name)
