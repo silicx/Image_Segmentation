@@ -12,7 +12,7 @@ import torch.backends.cudnn as cudnn
 
 from utils.evaluation import Metrics
 from utils.network import U_Net
-from utils.data_loader import *
+from utils.data_loader import get_loader
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
@@ -290,11 +290,11 @@ def main(config):
 
     print(config)
         
-    train_loader = data_loader.get_loader(config, mode='train')
-    valid_loader = data_loader.get_loader(config, mode='valid')
-    test_loader = data_loader.get_loader(config, mode='test')
+    train_loader = get_loader(config, mode='train')
+    valid_loader = get_loader(config, mode='valid')
+    test_loader = get_loader(config, mode='test')
 
-    solve = solver.Solver(config, train_loader, valid_loader, test_loader)
+    solve = Solver(config, train_loader, valid_loader, test_loader)
 
     
     # Train and sample the images
