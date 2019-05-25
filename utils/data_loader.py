@@ -21,7 +21,6 @@ class H5pyDataset(data.Dataset):
 		self.image_size = image_size
 		self.mode = mode
 		self.RotationDegree = [0,90,180,270]
-		self.augmentation_prob = augmentation_prob
 
 		assert exp_name in ['axis0', 'axis1', 'axis2']
 		self.exp_name = exp_name
