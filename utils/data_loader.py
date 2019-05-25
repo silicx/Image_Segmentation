@@ -71,7 +71,7 @@ def get_loader(config, mode='train'):
 		exp_name = config.name,
 		root = config.image_path,
 		image_size =config.image_size, 
-		mode=mode
+		mode=mode,
 		data_mode=config.data_mode)
 	
 	data_loader = data.DataLoader(
