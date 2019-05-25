@@ -1,7 +1,13 @@
 import numpy as np
 import h5py, os, cv2, random, json, shutil, logging
 
+
 def split_data(config, override=False):
+    """
+    split 3D CT data to 2D slices
+    :config: instance of class 'Configuration'
+    :override: (bool) override the existed folder if set to True
+    """
     img_dir = config.data_root_path
     logging.info(img_dir)
     if override:
@@ -18,7 +24,7 @@ def split_data(config, override=False):
     counter = 0
 
     for ind in range(1, 11):
-        print(ind)
+        logging.info("File {}".format(ind))
 
         fp = h5py.File(os.path.join(config.h5data_path, "case{}.h5".format(ind)), 'r')
 
@@ -68,4 +74,56 @@ def split_data(config, override=False):
 
 
     for k,v in split_dirs.items():
-        print(k, len(os.listdir(v)))
+        logging.info("{}: {} slices".format(k, len(os.listdir(v))))
+
+
+
+
+def nii_to_hdf5(DATA_PATH = "nii_label", OUT_PATH  = "h5_8b"):
+    """
+    convert .nii files to hdf5 files
+    :DATA_PATH: input .nii folder. The folder must contain 'case?.nii.gz' and 'case?_label.nii.gz'
+    :OUT_PATH: output .h5 folder
+    *requirement: 'SimpleITK' package (pip install SimpleITK)
+    """
+    import SimpleITK as sitk
+
+    if not os.path.exists(OUT_PATH):
+        os.mkdir(OUT_PATH)
+        
+    for ind in range(1, 13):
+        
+        path = os.path.join(DATA_PATH, 'case{}.nii.gz'.format(ind))
+        img = sitk.ReadImage(path)
+        data = sitk.GetArrayFromImage(img)  # 0~4095 (12bit gray)
+        
+        print("Shape:", data.shape)
+        
+        if ind in [11,12]:  data = data+1024
+        data = (data/16).astype(np.uint8)
+        
+        path = os.path.join(DATA_PATH, 'case{}_label.nii.gz'.format(ind))
+        img = sitk.ReadImage(path)
+        annot = sitk.GetArrayFromImage(img)
+        
+        f = h5py.File(os.path.join(OUT_PATH, 'case{}.h5'.format(ind)), 'w')
+        f['data'] = data
+        f['annot'] = annot
+        f.close()
+
+
+
+
+
+
+
+# 1 (559, 512, 512), 0-18
+# 2 (507, 512, 512), 0-17
+# 3 (560, 512, 512), 0-17
+# 4 (625, 512, 512), 0-19
+# 5 (601, 512, 512), 0-18
+# 6 (562, 512, 512), 0-17
+# 7 (509, 512, 512), 0-17
+# 8 (548, 512, 512), 0-18
+# 9 (572, 512, 512), 0-18
+# 10 (552, 512, 512), 0-17

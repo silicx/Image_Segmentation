@@ -288,24 +288,9 @@ def main(config):
 
     print(config)
         
-    train_loader = data_loader.get_loader(exp_name = exp_name,
-                            image_path=config.train_path,
-                            image_size=config.image_size,
-                            batch_size=config.batch_size,
-                            num_workers=config.num_workers,
-                            mode='train')
-    valid_loader = data_loader.get_loader(exp_name = exp_name,
-                            image_path=config.valid_path,
-                            image_size=config.image_size,
-                            batch_size=config.batch_size,
-                            num_workers=config.num_workers,
-                            mode='valid')
-    test_loader = data_loader.get_loader(exp_name = exp_name,
-                            image_path=config.test_path,
-                            image_size=config.image_size,
-                            batch_size=config.batch_size,
-                            num_workers=config.num_workers,
-                            mode='test')
+    train_loader = data_loader.get_loader(config, mode='train')
+    valid_loader = data_loader.get_loader(config, mode='valid')
+    test_loader = data_loader.get_loader(config, mode='test')
 
     solve = solver.Solver(config, train_loader, valid_loader, test_loader)
 
