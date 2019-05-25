@@ -37,12 +37,12 @@ def split_data(config, override=False):
         if config.name == "axis1":
             r = r[r.shape[0]%16: ,...]
             l = l[l.shape[0]%16: ,...]
-            r = np.transpose(r, (1,0,2,3))
+            r = np.transpose(r, (1,0,2))
             l = np.transpose(l, (1,0,2))
         elif config.name == 'axis2':
             r = r[r.shape[0]%16: ,...]
             l = l[l.shape[0]%16: ,...]
-            r = np.transpose(r, (2,0,1,3))
+            r = np.transpose(r, (2,0,1))
             l = np.transpose(l, (2,0,1))
 
 
