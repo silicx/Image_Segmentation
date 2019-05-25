@@ -66,7 +66,7 @@ def get_loader(config, mode='train'):
 	dataset = H5pyDataset(
 		exp_name = config.name,
 		root = os.path.join(config.data_root_path, mode),
-		mode = mode
+		mode = mode,
 		out_ch = config.out_ch)
 	
 	data_loader = data.DataLoader(
