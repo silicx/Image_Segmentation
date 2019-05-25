@@ -21,7 +21,7 @@ logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
 
 class Solver(object):
 	def __init__(self, config, train_loader, valid_loader, test_loader):
-
+		self.name = config.name
 		# Data loader
 		self.train_loader = train_loader
 		self.valid_loader = valid_loader
@@ -53,6 +53,8 @@ class Solver(object):
 		self.model_path = config.model_path
 		self.result_path = config.result_path
 		self.mode = config.mode
+
+		self.image_log_freq = 100
 
 		self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 		self.model_type = config.model_type
@@ -111,10 +113,10 @@ class Solver(object):
 		
 		metrics = Metrics()
 
-		image_log_dir = "/content/drive/image_log/train"
+		image_log_dir = "/content/drive/image_log/{}/train".format(self.name)
 
 		for i, (images, GT) in enumerate(self.train_loader):
-			if i%50==0:
+			if i%self.image_log_freq==0:
 				store_classification_image(GT[0, ...], image_log_dir, "{}_gt.jpg".format(i))
 				store_raw_image(images[0, ...], image_log_dir, "{}_img.jpg".format(i))
 
@@ -122,6 +124,7 @@ class Solver(object):
 			GT = GT.to(self.device)
 
 			SR = torch.nn.Softmax()(self.unet(images))
+			print(GT.shape, SR.shape)
 			SR_flat = SR.view(SR.size(0),-1)
 
 			GT_flat = GT.view(GT.size(0),-1)
@@ -142,7 +145,7 @@ class Solver(object):
 			logging.info('Iteration {}/{}, Loss={:.4f}, {}'.format(
 				i+1, len(self.train_loader), loss.item(),str(delta)))
 
-			if i%50==0:
+			if i%self.image_log_freq==0:
 				SR = SR.cpu()
 				store_classification_image(SR, image_log_dir, "{}_sg.jpg".format(i))
 			
@@ -159,7 +162,7 @@ class Solver(object):
 			metrics = Metrics()
 			
 			for i, (images, GT) in enumerate(self.valid_loader):
-				if i%50==0:
+				if i%self.image_log_freq==0:
 					gt0 = torchvision.transforms.ToPILImage()(GT[0, ...])
 					im0 = torchvision.transforms.ToPILImage()(images[0, ...])
 					os.makedirs("/content/drive/image_log/valid", exist_ok=True)
@@ -172,7 +175,7 @@ class Solver(object):
 
 				metrics.add(Metrics(SR, GT))
 
-				if i%50==0:
+				if i%self.image_log_freq==0:
 					SR = SR.cpu()
 					sr0 = torchvision.transforms.ToPILImage()(SR[0, ...])
 					srb = torchvision.transforms.ToPILImage()((SR[0, ...]>0.5).float())
