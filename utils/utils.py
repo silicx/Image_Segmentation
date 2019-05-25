@@ -13,9 +13,9 @@ def store_raw_image(tensor, folder, filename):
 
 def store_classification_image(tensor, folder, filename):
     os.makedirs(folder, exist_ok=True)
-    tensor = torch.argmax(tensor, dim=0)
+    tensor = torch.argmax(tensor, dim=0).float()
     
-    store_raw_image(tensor/20, folder, filename)
+    store_raw_image(tensor/20., folder, filename)
 
 
 
