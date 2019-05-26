@@ -4,7 +4,7 @@ from PIL import Image
 import torchvision.transforms as T
 
 import utils.solver
-from data_loader import get_loader
+from utild.data_loader import get_loader
 from utils.network import U_Net
 
 
