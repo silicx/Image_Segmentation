@@ -75,7 +75,7 @@ def get_loader(config, mode='train'):
 		exp_name = config.name,
 		root = os.path.join(config.data_root_path, mode),
 		mode = mode,
-		out_ch = config.output_ch
+		out_ch = config.output_ch,
 		data_mode = config.data_mode)
 	
 	data_loader = data.DataLoader(

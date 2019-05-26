@@ -29,9 +29,6 @@ class Configuration:
         self.model_path         = '/content/drive/models/{}'.format(exp_name)
         self.h5data_path        = '/content/drive/h5_8b'
         self.data_root_path     = '/content/data/{}/'.format(exp_name)
-        #self.train_path         = '/content/data/{}/train/'.format(exp_name)
-        #self.valid_path         = '/content/data/{}/valid/'.format(exp_name)
-        #self.test_path          = '/content/data/{}/test/'.format(exp_name)
         self.result_path        = '/content/drive/log/{}'.format(exp_name)    # LOG_DIR
 
         self.cuda_idx           = 1
