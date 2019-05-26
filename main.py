@@ -91,7 +91,7 @@ def test_3D(config, data_dir, save_dir):
                 unet.train(False)
                 unet.eval()
                 img = img.to(device)
-                pred = torch.Softmax(dim=1)(unet(img))
+                pred = torch.nn.Softmax(dim=1)(unet(img))
                 pred = pred[0,...]
                 pred = torch.argmax(pred, dim=0)
                 pred = pred.cpu().numpy()
