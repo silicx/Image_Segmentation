@@ -9,6 +9,7 @@ import torch.backends.cudnn as cudnn
 import utils.solver
 from utils.data_loader import get_loader
 from utils.network import U_Net
+from utils.evaluation import evaluate_3D_image, evaluate_3D_path
 
 
 def train(config):

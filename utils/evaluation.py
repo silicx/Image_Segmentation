@@ -4,7 +4,7 @@ import numpy as np
 # SR : Segmentation Result
 # GT : Ground Truth
 
-class Metrics:
+class Metrics\
     def __init__(self, SR=None, GT=None, threshold=0.5):
         self.acc = []		# Accuracy
         self.SE  = []		# Sensitivity (Recall)
@@ -163,7 +163,7 @@ def evaluate_3D_image(pred, gt):
         'mean_accuracy': np.array(classwise_acc).mean(),
     }
     
-    pred, gt = pred>0, gt>0    
+    pred, gt = pred>0, gt>0
     
     TP = np.sum(pred   & gt)
     FN = np.sum(pred   & (~gt))
