@@ -10,9 +10,9 @@ from torch.autograd import Variable
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 
-from evaluation import Metrics
-from network import U_Net
-from utils import store_raw_image, store_classification_image
+from utils.evaluation import Metrics
+from utils.network import U_Net
+from utils.utils import store_raw_image, store_classification_image
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
