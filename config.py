@@ -39,7 +39,7 @@ class Configuration:
             self.name, self.num_epochs, self.batch_size, self.lr, self.mode)
 
     def check_constraint(self):
-        assert self.exp_name in ['axis0', 'axis1', 'axis2']
+        assert self.name in ['axis0', 'axis1', 'axis2']
         assert self.output_ch in [2, 20]
         assert self.mode in ['train', 'valid', 'test']
         assert self.model_type in ['U_Net']
