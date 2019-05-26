@@ -154,7 +154,7 @@ def evaluate_3D_image(pred, gt):
     res = dict()
     
     classwise_acc = []
-    for i in range(min(gt), max(gt)+1):
+    for i in range(np.min(gt), np.max(gt)+1):
         tot = np.sum(gt==i)
         if tot>0:
             classwise_acc.append(np.sum((pred==gt)&(gt==i))/tot)
