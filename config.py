@@ -17,7 +17,6 @@ class Configuration:
         self.lr                 = 5e-4
         self.beta1              = 0.5         # momentum1 in Adam
         self.beta2              = 0.999       # momentum2 in Adam
-        self.augmentation_prob  = 0.
 
         self.log_step           = 1
         self.val_step           = 1
@@ -25,7 +24,7 @@ class Configuration:
         # misc
         self.mode               = 'train'
         self.model_type         = 'U_Net'     # 'U_Net/R2U_Net/AttU_Net/R2AttU_Net'
-        #self.data_mode          = 'binary'       # binary/multiple
+        self.data_mode          = 'raw'       # raw/location
         
         self.model_path         = '/content/drive/models/{}'.format(exp_name)
         self.h5data_path        = '/content/drive/h5_8b'
@@ -41,3 +40,16 @@ class Configuration:
     def __str__(self):
         return "name={}, n_epoch={}, batch_size={}, lr={}, mode={}".format(
             self.name, self.num_epochs, self.batch_size, self.lr, self.mode)
+
+    def check_constraint(self):
+        assert self.exp_name in ['axis0', 'axis1', 'axis2']
+        assert self.output_ch in [2, 20]
+        assert self.mode in ['train', 'valid', 'test']
+        assert self.model_type in ['U_Net']
+        assert self.data_mode in ['raw', 'location']
+        if self.data_mode=='location':
+            assert self.img_ch==3
+        elif self.data_mode=='raw':
+            assert self.img_ch==1
+
+

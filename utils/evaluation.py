@@ -44,6 +44,7 @@ class Metrics:
         self.F1  += met.F1 
         self.JS  += met.JS 
         self.DC  += met.DC 
+        self.class_acc += met.class_acc
 
     def __str__(self):
         return 'Acc={:.4f}, SE={:.4f}, PC={:.4f}, JS={:.4f}, DC={:.4f}, C_acc={:.4f}'.format(

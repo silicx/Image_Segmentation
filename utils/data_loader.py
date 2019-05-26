@@ -12,18 +12,17 @@ from torchvision.transforms import functional as F
 
 
 class H5pyDataset(data.Dataset):
-	def __init__(self, root, exp_name, mode, out_ch):
+	def __init__(self, root, exp_name, mode, out_ch, data_mode):
 		"""Initializes image paths and preprocessing module."""
 		self.root = root
 		
 		# GT : Ground Truth
 		self.image_paths = list(map(lambda x: os.path.join(root, x), os.listdir(root)))
 		self.mode = mode
-		assert out_ch in [2, 20]
 		self.out_ch = out_ch
 
-		assert exp_name in ['axis0', 'axis1', 'axis2']
 		self.exp_name = exp_name
+		self.data_mode = data_mode
 
 		print("image count in {} path :{}".format(self.mode,len(self.image_paths)))
 
@@ -43,6 +42,15 @@ class H5pyDataset(data.Dataset):
 		image = Image.fromarray(image.astype(np.uint8))
 		image = T.ToTensor()(image)
 		image = T.Normalize((.5,)*n_channel, (.5,)*n_channel)(image)
+
+		if self.data_mode=='location':
+			print(image.shape)
+			image = torch.stack([
+				image,
+				torch.linspace(0, 1, image.size(1)).repeat(image.size(0)),
+				torch.linspace(0, 1, image.size(0)).repeat(image.size(1)).transpose(1,0),
+			], dim=0)
+
 
 		if self.out_ch == 2:
 			gt = gt>0
@@ -67,7 +75,8 @@ def get_loader(config, mode='train'):
 		exp_name = config.name,
 		root = os.path.join(config.data_root_path, mode),
 		mode = mode,
-		out_ch = config.output_ch)
+		out_ch = config.output_ch
+		data_mode = config.data_mode)
 	
 	data_loader = data.DataLoader(
 		dataset=dataset,

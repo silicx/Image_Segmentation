@@ -13,6 +13,7 @@ from utils.evaluation import evaluate_3D_image, evaluate_3D_path
 
 
 def train(config):
+    config.chech_constraint()
     cudnn.benchmark = True
     assert config.model_type in ['U_Net']
 
