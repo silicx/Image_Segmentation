@@ -122,6 +122,7 @@ class Solver(object):
 				store_raw_image(images[0, ...], image_log_dir, "{}_img.jpg".format(i))
 
 			images = images.to(self.device)
+			print(images.shape)
 			GT = GT.to(self.device)
 
 			SR = torch.nn.Softmax(dim=1)(self.unet(images))

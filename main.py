@@ -22,7 +22,6 @@ def train(config):
         os.makedirs(config.model_path)
     if not os.path.exists(config.result_path):
         os.makedirs(config.result_path)
-    config.result_path = os.path.join(config.result_path,config.model_type)
     if not os.path.exists(config.result_path):
         os.makedirs(config.result_path)
 
