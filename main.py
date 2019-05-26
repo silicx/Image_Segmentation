@@ -82,7 +82,7 @@ def test_3D(config, data_dir, save_dir):
             img = Image.fromarray(img)
             img = T.ToTensor()(img)
             img = T.Normalize((.5,), (.5,))(img)
-            #img = img.view(1,img.size(1), img.size(2))
+            img = img.view(1, *img.shape)
             
             with torch.no_grad():
                 unet.train(False)
