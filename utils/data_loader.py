@@ -44,12 +44,11 @@ class H5pyDataset(data.Dataset):
 		image = T.Normalize((.5,)*n_channel, (.5,)*n_channel)(image)
 
 		if self.data_mode=='location':
-			print(image.shape)
-			image = torch.stack([
-				image,
-				torch.linspace(0, 1, image.size(1)).repeat(image.size(0)),
-				torch.linspace(0, 1, image.size(0)).repeat(image.size(1)).transpose(1,0),
-			], dim=0)
+			image = image.view(*image.shape[1:])
+			idx_i = torch.linspace(0, 1, image.size(1)).repeat(image.size(0))
+			idx_j = torch.linspace(0, 1, image.size(0)).repeat(image.size(1)).transpose(1,0)
+			print(image.shape, idx_i.shape, idx_j.shape)
+			image = torch.stack([image, idx_i, idx_j], dim=0)
 
 
 		if self.out_ch == 2:
