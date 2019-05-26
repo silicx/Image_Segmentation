@@ -32,7 +32,6 @@ class Solver(object):
 		self.img_ch = config.img_ch
 		self.output_ch = config.output_ch
 		self.criterion = torch.nn.BCELoss()
-		self.augmentation_prob = config.augmentation_prob
 
 		# Hyper-parameters
 		self.lr = config.lr
