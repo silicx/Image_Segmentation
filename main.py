@@ -84,6 +84,11 @@ def test_3D(config, data_dir, save_dir):
             img = Image.fromarray(img)
             img = T.ToTensor()(img)
             img = T.Normalize((.5,), (.5,))(img)
+            if config.data_mode=='location':
+                img = img.view(*img.shape[1:])
+                idx_i = torch.linspace(0, 1, img.size(1)).repeat(img.size(0), 1)
+                idx_j = torch.linspace(0, 1, img.size(0)).repeat(img.size(1), 1).transpose(1,0)
+                img = torch.stack([img, idx_i, idx_j], dim=0)
             img = img.view(1, *img.shape)
             
             with torch.no_grad():
