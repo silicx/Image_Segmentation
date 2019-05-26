@@ -10,10 +10,9 @@ from torch.autograd import Variable
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 
-from utils.evaluation import Metrics
-from utils.network import U_Net
-from utils.data_loader import get_loader
-from utils.utils import store_raw_image, store_classification_image
+from evaluation import Metrics
+from network import U_Net
+from utils import store_raw_image, store_classification_image
 
 
 logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
@@ -255,35 +254,3 @@ class Solver(object):
 					print('Best %s model score : %.4f'%(self.model_type,best_unet_score))
 					torch.save(best_unet,unet_path)
 		
-
-
-def main(config):
-    cudnn.benchmark = True
-    if config.model_type not in ['U_Net','R2U_Net','AttU_Net','R2AttU_Net']:
-        print('ERROR!! model_type should be selected in U_Net/R2U_Net/AttU_Net/R2AttU_Net')
-        print('Your input for model_type was %s'%config.model_type)
-        return
-
-    # Create directories if not exist
-    if not os.path.exists(config.model_path):
-        os.makedirs(config.model_path)
-    if not os.path.exists(config.result_path):
-        os.makedirs(config.result_path)
-    config.result_path = os.path.join(config.result_path,config.model_type)
-    if not os.path.exists(config.result_path):
-        os.makedirs(config.result_path)
-
-    print(config)
-        
-    train_loader = get_loader(config, mode='train')
-    valid_loader = get_loader(config, mode='valid')
-    test_loader = get_loader(config, mode='test')
-
-    solve = Solver(config, train_loader, valid_loader, test_loader)
-
-    
-    # Train and sample the images
-    if config.mode == 'train':
-        solve.run()
-    elif config.mode == 'test':
-        solve.test()
