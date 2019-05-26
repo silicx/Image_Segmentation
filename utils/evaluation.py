@@ -45,12 +45,17 @@ class Metrics:
         self.DC  += met.DC 
 
     def __str__(self):
-        return 'Acc={:.4f}, SE={:.4f}, PC={:.4f}, JS={:.4f}, DC={:.4f}'.format(
-				np.nanmean(np.array(self.acc)),
-                np.nanmean(np.array(self.SE)), 
-                np.nanmean(np.array(self.PC)), 
-                np.nanmean(np.array(self.JS)), 
-                np.nanmean(np.array(self.DC)))
+        try:
+            s = 'Acc={:.4f}, SE={:.4f}, PC={:.4f}, JS={:.4f}, DC={:.4f}, C_acc={:.4f}'.format(
+                    np.nanmean(np.array(self.acc)),
+                    np.nanmean(np.array(self.SE)), 
+                    np.nanmean(np.array(self.PC)), 
+                    np.nanmean(np.array(self.JS)), 
+                    np.nanmean(np.array(self.DC)),
+                    np.nanmean(np.array(self.class_acc)))
+        except RuntimeWarning:
+            pass
+        return s
 
 
 def get_classfication_acc(SR, GT):
