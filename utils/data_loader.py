@@ -47,17 +47,13 @@ class H5pyDataset(data.Dataset):
 			image = image.view(*image.shape[1:])
 			idx_i = torch.linspace(0, 1, image.size(1)).repeat(image.size(0), 1)
 			idx_j = torch.linspace(0, 1, image.size(0)).repeat(image.size(1), 1).transpose(1,0)
-			print('i',idx_i)
-			print('j',idx_j)
 			image = torch.stack([image, idx_i, idx_j], dim=0)
 
 
 		if self.out_ch == 2:
 			gt = gt>0
-		expand = []
-		for i in range(self.out_ch):
-			expand.append(gt==i)
-		gt = np.stack(expand)
+		
+		gt = np.stack([gt==i for i in range(self.out_ch)])
 		gt = torch.Tensor(gt)
 
 		return image, gt
