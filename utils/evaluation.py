@@ -45,7 +45,7 @@ class Metrics:
         self.DC  += met.DC 
 
     def __str__(self):
-        return = 'Acc={:.4f}, SE={:.4f}, PC={:.4f}, JS={:.4f}, DC={:.4f}, C_acc={:.4f}'.format(
+        return 'Acc={:.4f}, SE={:.4f}, PC={:.4f}, JS={:.4f}, DC={:.4f}, C_acc={:.4f}'.format(
                 np.nanmean(np.array(self.acc)),
                 np.nanmean(np.array(self.SE)), 
                 np.nanmean(np.array(self.PC)), 
