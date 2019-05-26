@@ -185,7 +185,6 @@ def evaluate_3D_image(pred, gt):
 def evaluate_3D_path(pred_path, gt_path):
     with h5py.File(pred_path, 'r') as fp:
         pred = np.array(fp['data'])
-        pred = pred>0.5
     
     with h5py.File(gt_path, 'r') as fp:
         gt = np.array(fp['annot'])
