@@ -4,6 +4,7 @@ from PIL import Image
 
 import torch
 import torchvision.transforms as T
+import torch.backends.cudnn as cudnn
 
 import utils.solver
 from utils.data_loader import get_loader
@@ -12,10 +13,7 @@ from utils.network import U_Net
 
 def train(config):
     cudnn.benchmark = True
-    if config.model_type not in ['U_Net','R2U_Net','AttU_Net','R2AttU_Net']:
-        print('ERROR!! model_type should be selected in U_Net/R2U_Net/AttU_Net/R2AttU_Net')
-        print('Your input for model_type was %s'%config.model_type)
-        return
+    assert config.model_type in ['U_Net']
 
     # Create directories if not exist
     if not os.path.exists(config.model_path):
