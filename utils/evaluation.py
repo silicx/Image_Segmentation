@@ -145,3 +145,48 @@ def get_DC(SR,GT,threshold=0.5):
         return np.nan
     else:
         return float(2*Inter)/(float(Sum))
+
+
+
+
+def evaluate_3D_image(pred, gt):
+    res = dict()
+    
+    classwise_acc = []
+    for i in range(min(gt), max(gt)+1):
+        tot = np.sum(gt==i)
+        if tot>0:
+            classwise_acc.append(np.sum((pred==gt)&(gt==i))/tot)
+    
+    res['classification'] = {
+        'accuracy': np.sum((pred==gt)&(gt>0))/np.sum(gt>0),
+        'mean_accuracy': np.array(classwise_acc).mean(),
+    }
+    
+    pred, gt = pred>0, gt>0    
+    
+    TP = np.sum(pred   & gt)
+    FN = np.sum(pred   & (~gt))
+    FP = np.sum((~pred)& gt)
+    
+    res['segmentation'] = {
+        'accuracy' : np.sum(pred==gt)/gt.size,
+        'precision': TP/(TP+FP),
+        'recall'   : TP/(TP+FN),
+        'iou'      : np.sum(pred&gt)/np.sum(pred|gt),
+        'dice'     : np.sum(pred&gt)*2/(np.sum(pred)+np.sum(gt))
+    }
+    
+    return res
+
+
+def evaluate_3D_path(pred_path, gt_path):
+    with h5py.File(pred_path, 'r') as fp:
+        pred = np.array(fp['data'])
+        pred = pred>0.5
+    
+    with h5py.File(gt_path, 'r') as fp:
+        gt = np.array(fp['annot'])
+        gt = gt[gt.shape[0]%16:, ...]
+        
+    return evaluate_3D_image(pred, gt)

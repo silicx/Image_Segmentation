@@ -94,7 +94,7 @@ def test_3D(config, data_dir, save_dir):
                 pred = pred.cpu().numpy()
                 res.append(pred)
         
-        data = np.concatenate(res, axis=0)
+        data = np.stack(res, axis=0)
         logging.info(data.shape)
         
         if config.name == 'axis1':
