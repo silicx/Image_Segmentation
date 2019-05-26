@@ -4,7 +4,7 @@ import numpy as np
 # SR : Segmentation Result
 # GT : Ground Truth
 
-class Metrics\
+class Metrics:
     def __init__(self, SR=None, GT=None, threshold=0.5):
         self.acc = []		# Accuracy
         self.SE  = []		# Sensitivity (Recall)
