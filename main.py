@@ -110,4 +110,4 @@ def test_3D(config, data_dir, save_dir):
             data = data.transpose((1,2,0))
             
         with h5py.File(os.path.join(save_path, fname), 'w') as fp:
-            fp['data'] = data
+            dset = fp.create_dataset('data', data=data, compression='gzip')
