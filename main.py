@@ -74,7 +74,12 @@ def test_3D(config, data_dir, save_dir):
         elif config.name == 'axis2':
             data = data.transpose((2,0,1))
         
-        res = []
+        
+        fp = h5py.File(os.path.join(save_path, fname), 'w')
+        dset = fp.create_dataset(
+            'data', 
+            shape=(*data.shape, config.output_ch), 
+            compression='gzip')
         
         for i in range(data.shape[0]):
             if (i+1)%128==0:
@@ -99,17 +104,16 @@ def test_3D(config, data_dir, save_dir):
                 #pred = pred[0,...]
                 #pred = torch.argmax(pred, dim=0)
                 pred = pred.cpu().numpy()
-                pred = pred.transpose((0,2,3,1))
-                res.append(pred)
+                date = pred.transpose((0,2,3,1))
         
-        data = np.concatenate(res, axis=0)
+                #data = np.concatenate(res, axis=0)
+
+                if config.name == 'axis0':
+                    dset[i,:,:,:] = data
+                if config.name == 'axis1':
+                    dset[:,i,:,:] = data.transpose((1,0,2,3))
+                elif config.name == 'axis2':
+                    dset[:,:,i,:] = data.transpose((1,2,0,3))
         
-        if config.name == 'axis1':
-            data = data.transpose((1,0,2,3))
-        elif config.name == 'axis2':
-            data = data.transpose((1,2,0,3))
-        
-        logging.info(data.shape)
-            
-        with h5py.File(os.path.join(save_path, fname), 'w') as fp:
-            dset = fp.create_dataset('data', data=data, compression='gzip')
+        logging.info(dset.shape)
+        fp.close()
