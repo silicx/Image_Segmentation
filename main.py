@@ -111,8 +111,11 @@ def test_3D(config, data_dir, save_dir):
                     if config.name == 'axis0':
                         dset[i,:,:,:] = data
                     if config.name == 'axis1':
-                        dset[:,i,:,:] = data.transpose((1,0,2,3))
+                        data = data.transpose((1,0,2,3))
+                        print(data.shape)
+                        dset[:,i,:,:] = 
                     elif config.name == 'axis2':
-                        dset[:,:,i,:] = data.transpose((1,2,0,3))
+                        data = data.transpose((1,2,0,3))
+                        dset[:,:,i,:] = data
             
             logging.info(dset.shape)
