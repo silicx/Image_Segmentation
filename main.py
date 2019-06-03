@@ -104,7 +104,7 @@ def test_3D(config, data_dir, save_dir):
                 #pred = pred[0,...]
                 #pred = torch.argmax(pred, dim=0)
                 pred = pred.cpu().numpy()
-                date = pred.transpose((0,2,3,1))
+                data = pred.transpose((0,2,3,1))
         
                 #data = np.concatenate(res, axis=0)
 
