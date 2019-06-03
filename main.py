@@ -82,17 +82,21 @@ def test_3D(config, data_dir, save_dir, bsize=8):
         for i in range(0, data.shape[0], bsize):
             if (i+1)%128==0:
                 logging.info("[{}/{}]".format(i+1, data.shape[0]))
-                
-            img = data[i:i+bsize,...]
-            img = Image.fromarray(img)
-            img = T.ToTensor()(img)
-            img = T.Normalize((.5,), (.5,))(img)
-            if config.data_mode=='location':
-                img = img.view(*img.shape[1:])
-                idx_i = torch.linspace(0, 1, img.size(1)).repeat(img.size(0), 1)
-                idx_j = torch.linspace(0, 1, img.size(0)).repeat(img.size(1), 1).transpose(1,0)
-                img = torch.stack([img, idx_i, idx_j], dim=0)
-            img = img.view(1, *img.shape)
+            
+            batch = []
+            for j in range(i, i+bsize):
+                img = data[j,...]
+                img = Image.fromarray(img)
+                img = T.ToTensor()(img)
+                img = T.Normalize((.5,), (.5,))(img)
+                if config.data_mode=='location':
+                    img = img.view(*img.shape[1:])
+                    idx_i = torch.linspace(0, 1, img.size(1)).repeat(img.size(0), 1)
+                    idx_j = torch.linspace(0, 1, img.size(0)).repeat(img.size(1), 1).transpose(1,0)
+                    img = torch.stack([img, idx_i, idx_j], dim=0)
+                img = img.view(1, *img.shape)
+                batch.append(img)
+            img = torch.concatenate(batch)
             
             with torch.no_grad():
                 unet.train(False)
