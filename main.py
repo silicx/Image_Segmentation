@@ -41,13 +41,16 @@ def train(config):
         solve.test()
 
 
-def test_3D(config, data_dir, save_dir):
+def test_3D(config, data_dir, save_dir, bsize=8):
     """
     produce the inference result of 3D images
     :config: instance of class 'Configuration'
     :data_dir: directory of test set (case1.h5~case10.h5)
     :save_dir: directory of output
+    :bsize: batch size, in [1,2,4,8,16]
     """
+
+    assert 16%bsize==0
 
     unet_path = os.path.join(config.model_path, 'best_model.pkl')
     assert os.path.exists(unet_path)
@@ -76,11 +79,11 @@ def test_3D(config, data_dir, save_dir):
         
         res = []
         
-        for i in range(data.shape[0]):
-            if i%100==99:
+        for i in range(0, data.shape[0], bsize):
+            if (i+1)%128==0:
                 logging.info("[{}/{}]".format(i+1, data.shape[0]))
                 
-            img = data[i,...]
+            img = data[i:i+bsize,...]
             img = Image.fromarray(img)
             img = T.ToTensor()(img)
             img = T.Normalize((.5,), (.5,))(img)
@@ -96,18 +99,20 @@ def test_3D(config, data_dir, save_dir):
                 unet.eval()
                 img = img.to(device)
                 pred = torch.nn.Softmax(dim=1)(unet(img))
-                pred = pred[0,...]
-                pred = torch.argmax(pred, dim=0)
+                #pred = pred[0,...]
+                #pred = torch.argmax(pred, dim=0)
                 pred = pred.cpu().numpy()
+                pred = pred.transpose((0,2,3,1))
                 res.append(pred)
         
-        data = np.stack(res, axis=0)
-        logging.info(data.shape)
+        data = np.concatenate(res, axis=0)
         
         if config.name == 'axis1':
-            data = data.transpose((1,0,2))
+            data = data.transpose((1,0,2,3))
         elif config.name == 'axis2':
-            data = data.transpose((1,2,0))
+            data = data.transpose((1,2,0,3))
+        
+        logging.info(data.shape)
             
         with h5py.File(os.path.join(save_path, fname), 'w') as fp:
             dset = fp.create_dataset('data', data=data, compression='gzip')
