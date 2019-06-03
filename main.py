@@ -75,6 +75,7 @@ def test_3D(config, data_dir, save_dir):
                 'data', 
                 shape=(*data.shape, config.output_ch), 
                 compression='gzip')
+            print(dset.shape)
             
             if config.name == 'axis1':
                 data = data.transpose((1,0,2))
