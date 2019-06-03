@@ -75,45 +75,44 @@ def test_3D(config, data_dir, save_dir):
             data = data.transpose((2,0,1))
         
         
-        fp = h5py.File(os.path.join(save_path, fname), 'w')
-        dset = fp.create_dataset(
-            'data', 
-            shape=(*data.shape, config.output_ch), 
-            compression='gzip')
-        
-        for i in range(data.shape[0]):
-            if (i+1)%128==0:
-                logging.info("[{}/{}]".format(i+1, data.shape[0]))
+        with h5py.File(os.path.join(save_path, fname), 'w') as fp:
+            dset = fp.create_dataset(
+                'data', 
+                shape=(*data.shape, config.output_ch), 
+                compression='gzip')
             
-            img = data[i,...]
-            img = Image.fromarray(img)
-            img = T.ToTensor()(img)
-            img = T.Normalize((.5,), (.5,))(img)
-            if config.data_mode=='location':
-                img = img.view(*img.shape[1:])
-                idx_i = torch.linspace(0, 1, img.size(1)).repeat(img.size(0), 1)
-                idx_j = torch.linspace(0, 1, img.size(0)).repeat(img.size(1), 1).transpose(1,0)
-                img = torch.stack([img, idx_i, idx_j], dim=0)
-            img = img.view(1, *img.shape)
+            for i in range(data.shape[0]):
+                if (i+1)%128==0:
+                    logging.info("[{}/{}]".format(i+1, data.shape[0]))
+                
+                img = data[i,...]
+                img = Image.fromarray(img)
+                img = T.ToTensor()(img)
+                img = T.Normalize((.5,), (.5,))(img)
+                if config.data_mode=='location':
+                    img = img.view(*img.shape[1:])
+                    idx_i = torch.linspace(0, 1, img.size(1)).repeat(img.size(0), 1)
+                    idx_j = torch.linspace(0, 1, img.size(0)).repeat(img.size(1), 1).transpose(1,0)
+                    img = torch.stack([img, idx_i, idx_j], dim=0)
+                img = img.view(1, *img.shape)
+                
+                with torch.no_grad():
+                    unet.train(False)
+                    unet.eval()
+                    img = img.to(device)
+                    pred = torch.nn.Softmax(dim=1)(unet(img))
+                    #pred = pred[0,...]
+                    #pred = torch.argmax(pred, dim=0)
+                    pred = pred.cpu().numpy()
+                    data = pred.transpose((0,2,3,1))
             
-            with torch.no_grad():
-                unet.train(False)
-                unet.eval()
-                img = img.to(device)
-                pred = torch.nn.Softmax(dim=1)(unet(img))
-                #pred = pred[0,...]
-                #pred = torch.argmax(pred, dim=0)
-                pred = pred.cpu().numpy()
-                data = pred.transpose((0,2,3,1))
-        
-                #data = np.concatenate(res, axis=0)
+                    #data = np.concatenate(res, axis=0)
 
-                if config.name == 'axis0':
-                    dset[i,:,:,:] = data
-                if config.name == 'axis1':
-                    dset[:,i,:,:] = data.transpose((1,0,2,3))
-                elif config.name == 'axis2':
-                    dset[:,:,i,:] = data.transpose((1,2,0,3))
-        
-        logging.info(dset.shape)
-        fp.close()
+                    if config.name == 'axis0':
+                        dset[i,:,:,:] = data
+                    if config.name == 'axis1':
+                        dset[:,i,:,:] = data.transpose((1,0,2,3))
+                    elif config.name == 'axis2':
+                        dset[:,:,i,:] = data.transpose((1,2,0,3))
+            
+            logging.info(dset.shape)
