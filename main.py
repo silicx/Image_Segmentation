@@ -113,7 +113,7 @@ def test_3D(config, data_dir, save_dir):
                     if config.name == 'axis1':
                         data = data.transpose((1,0,2,3))
                         print(data.shape)
-                        dset[:,i,:,:] = 
+                        dset[:,i,:,:] = data
                     elif config.name == 'axis2':
                         data = data.transpose((1,2,0,3))
                         dset[:,:,i,:] = data
