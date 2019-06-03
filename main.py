@@ -69,17 +69,17 @@ def test_3D(config, data_dir, save_dir):
             data = np.array(fp['data'])
         data = data[data.shape[0]%16 :, ...]
         
-        if config.name == 'axis1':
-            data = data.transpose((1,0,2))
-        elif config.name == 'axis2':
-            data = data.transpose((2,0,1))
-        
         
         with h5py.File(os.path.join(save_path, fname), 'w') as fp:
             dset = fp.create_dataset(
                 'data', 
                 shape=(*data.shape, config.output_ch), 
                 compression='gzip')
+            
+            if config.name == 'axis1':
+                data = data.transpose((1,0,2))
+            elif config.name == 'axis2':
+                data = data.transpose((2,0,1))
             
             for i in range(data.shape[0]):
                 if (i+1)%128==0:
