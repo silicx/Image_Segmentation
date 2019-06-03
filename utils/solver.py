@@ -141,8 +141,9 @@ class Solver(object):
 			delta = Metrics(SR, GT)
 			metrics.add(delta)
 			
-			logging.info('Iteration {}/{}, Loss={:.4f}, {}'.format(
-				i+1, len(self.train_loader), loss.item(),str(delta)))
+			if (i+1)%10==0:
+				logging.info('Iteration {}/{}, Loss={:.4f}, {}'.format(
+					i+1, len(self.train_loader), loss.item(),str(delta)))
 
 			if i%self.image_log_freq==0:
 				SR = SR.cpu()
