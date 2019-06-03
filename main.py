@@ -96,7 +96,7 @@ def test_3D(config, data_dir, save_dir, bsize=8):
                     img = torch.stack([img, idx_i, idx_j], dim=0)
                 img = img.view(1, *img.shape)
                 batch.append(img)
-            img = torch.concatenate(batch)
+            img = torch.cat(batch, 0)
             
             with torch.no_grad():
                 unet.train(False)
