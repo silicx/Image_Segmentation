@@ -73,9 +73,7 @@ def test_3D(config, data_dir, save_dir):
         with h5py.File(os.path.join(save_path, fname), 'w') as fp:
             dset = fp.create_dataset(
                 'data', 
-                shape=(*data.shape, config.output_ch), 
-                compression='gzip')
-            print(dset.shape)
+                shape=(*data.shape, config.output_ch))
             
             if config.name == 'axis1':
                 data = data.transpose((1,0,2))
@@ -107,7 +105,7 @@ def test_3D(config, data_dir, save_dir):
                     pred = pred.cpu().numpy()
                     pred = pred.transpose((0,2,3,1))
                     pred = pred.reshape(*pred.shape[1:])
-                    
+
                     if config.name == 'axis0':
                         dset[i,:,:,:] = pred
                     if config.name == 'axis1':
