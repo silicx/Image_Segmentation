@@ -81,7 +81,7 @@ def test_3D(config, data_dir, save_dir):
                 data = data.transpose((2,0,1))
             
             for i in range(data.shape[0]):
-                if (i+1)%128==0:
+                if (i+1)%32==0:
                     logging.info("[{}/{}]".format(i+1, data.shape[0]))
                 
                 img = data[i,...]
