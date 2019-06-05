@@ -81,7 +81,7 @@ def test_3D(config, data_dir, save_dir):
                 data = data.transpose((2,0,1))
             
             for i in range(data.shape[0]):
-                if (i+1)%128==0:
+                if (i+1)%1==0:
                     logging.info("[{}/{}]".format(i+1, data.shape[0]))
                 
                 img = data[i,...]
@@ -100,8 +100,6 @@ def test_3D(config, data_dir, save_dir):
                     unet.eval()
                     img = img.to(device)
                     pred = torch.nn.Softmax(dim=1)(unet(img))
-                    #pred = pred[0,...]
-                    #pred = torch.argmax(pred, dim=0)
                     pred = pred.cpu().numpy()
                     pred = pred.transpose((0,2,3,1))
                     pred = pred.reshape(*pred.shape[1:])
