@@ -172,11 +172,11 @@ def evaluate_3D_image(pred, gt):
     FP = np.sum((~pred)& gt)
     
     res['segmentation'] = {
-        'accuracy' : np.sum(pred==gt)/gt.size,
-        'precision': TP/(TP+FP),
-        'recall'   : TP/(TP+FN),
-        'iou'      : np.sum(pred&gt)/np.sum(pred|gt),
-        'dice'     : np.sum(pred&gt)*2/(np.sum(pred)+np.sum(gt))
+        'accuracy' : (np.sum(pred==gt), gt.size),
+        'precision': (TP, (TP+FP)),
+        'recall'   : (TP, (TP+FN)),
+        'iou'      : (np.sum(pred&gt), np.sum(pred|gt)),
+        'dice'     : (np.sum(pred&gt)*2, (np.sum(pred)+np.sum(gt))),
     }
     
     return res
