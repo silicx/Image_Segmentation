@@ -105,6 +105,6 @@ def test_3D(config, data_dir, save_dir):
                     pred = torch.nn.Softmax(dim=1)(unet(img))
                     pred = pred.cpu().numpy()
                     pred = pred.transpose((0,2,3,1))
-                    dset[i,:,:] = pred.reshape(n_image, image_size, -1)
+                    dset[i,:,:] = pred.reshape(-1, image_size, pred.shape[3])
             
             logging.info(dset.shape)
