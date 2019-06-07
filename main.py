@@ -71,18 +71,21 @@ def test_3D(config, data_dir, save_dir):
         
         
         with h5py.File(os.path.join(save_path, fname), 'w') as fp:
-            dset = fp.create_dataset(
-                'data', 
-                shape=(*data.shape, config.output_ch))
-            
             if config.name == 'axis1':
                 data = data.transpose((1,0,2))
             elif config.name == 'axis2':
                 data = data.transpose((2,0,1))
+
+            n_image, image_size = data.shape[0], data.shape[1]*data.shape[2]
             
-            for i in range(data.shape[0]):
+            dset = fp.create_dataset(
+                'data', 
+                shape=(n_image, image_size, config.output_ch))
+            
+            
+            for i in range(n_image):
                 if (i+1)%32==0:
-                    logging.info("[{}/{}]".format(i+1, data.shape[0]))
+                    logging.info("[{}/{}]".format(i+1, n_image))
                 
                 img = data[i,...]
                 img = Image.fromarray(img)
@@ -102,15 +105,6 @@ def test_3D(config, data_dir, save_dir):
                     pred = torch.nn.Softmax(dim=1)(unet(img))
                     pred = pred.cpu().numpy()
                     pred = pred.transpose((0,2,3,1))
-                    pred = pred.reshape(*pred.shape[1:])
-
-                    if config.name == 'axis0':
-                        dset[i,:,:,:] = pred
-                    if config.name == 'axis1':
-                        #data = data.transpose((1,0,2,3))
-                        dset[:,i,:,:] = pred
-                    elif config.name == 'axis2':
-                        #data = data.transpose((1,2,0,3))
-                        dset[:,:,i,:] = pred
+                    dset[i,:,:] = pred.reshape(n_image, image_size, -1)
             
             logging.info(dset.shape)
