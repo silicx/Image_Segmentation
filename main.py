@@ -41,8 +41,6 @@ def train(config):
         solve.test()
 
 
-def _inference_3D_image(config, )
-
 
 def inference_3D(config, data_dir, save_dir):
     """
