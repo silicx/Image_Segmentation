@@ -161,8 +161,8 @@ def evaluate_3D_image(pred, gt):
             classwise_acc.append(np.sum((pred==gt)&(gt==i))/tot)
     
     res['classification'] = {
-        'accuracy': np.sum((pred==gt)&(gt>0))/np.sum(gt>0),
-        'mean_accuracy': np.array(classwise_acc).mean(),
+        'accuracy': (np.sum((pred==gt)&(gt>0)), np.sum(gt>0)),
+        'mean_accuracy': (np.array(classwise_acc).mean(), 1),
     }
     
     pred, gt = pred>0, gt>0
