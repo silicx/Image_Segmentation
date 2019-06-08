@@ -151,15 +151,13 @@ def get_DC(SR,GT,threshold=0.5):
 
 
 
-def evaluate_3D_image(pred, gt):
+def evaluate_3D_image(pred, gt, n_class=20):
     res = dict()
     
     classwise_acc = [[], []]
-    for i in range(np.min(gt), np.max(gt)+1):
-        tot = np.sum(gt==i)
-        if tot>0:
-            classwise_acc[0].append(np.sum((pred==gt)&(gt==i)))
-            classwise_acc[1].append(tot)
+    for i in range(0, n_class):
+        classwise_acc[0].append(np.sum((pred==gt)&(gt==i)))
+        classwise_acc[1].append(np.sum(gt==i))
     
     res['classification'] = {
         'accuracy': (np.sum((pred==gt)&(gt>0)), np.sum(gt>0)),
